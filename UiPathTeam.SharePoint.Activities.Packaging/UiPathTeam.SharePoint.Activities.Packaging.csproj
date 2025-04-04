@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
+		<VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("F0"))</VersionRevision>
+		<PackageId>UiPathTeam.SharePoint.Activities</PackageId>
+		<VersionPrefix Condition="'$(Configuration)' == 'Release'">1.9.8</VersionPrefix>
+		<!--<VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.8.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>-->
+		<VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.9.9-dev.$(VersionRevision)</VersionPrefix>
+		<Authors>Abdullah Al-Awlaqi</Authors>
+		<Owners>UiPathTeam InternalLabs</Owners>
+		<PackageOwners>UiPathTeam InternalLabs</PackageOwners>
+		<PackageTags>SharePoint, Activities, Package, Lists, Libraries, Permissions, Users, Groups</PackageTags>
+		<Product>UiPathTeam.SharePoint.Activities.Packaging</Product>
+		<PackageProjectUrl>https://marketplace.uipath.com/</PackageProjectUrl>
+		<PackageIconUrl>http://www.uipath.com/hubfs/Logos/uipath-nuget-logo.png</PackageIconUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Summary>Integration between SharePoint and UiPath.</Summary>
+		<Description>Integration between SharePoint and UiPath.</Description>
+		<PackageReleaseNotes>Migrated to .NET8 with different runtime. Read the release note here https://marketplace.uipath.com/listings/sharepoint-custom-activities-package/versions</PackageReleaseNotes>
+		<PackageOutputPath>..\Output\Activities\Packages\</PackageOutputPath>
+		<!--<PackageOutputPath>E:\InternalProjects\MarketplaceUpgrades\Debug</PackageOutputPath>-->
+		<TargetsForTfmSpecificBuildOutput>AddDlls</TargetsForTfmSpecificBuildOutput>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		
+		<!--<dependencies>
+			<dependency id="Microsoft.AspNet.WebApi.Client" version="6.0.0" />
+		</dependencies>-->
+	</PropertyGroup>
+	<Target Name="AddDlls">
+		<!-- PDBs for debug-->
+		<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.pdb" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.Activities.pdb" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.Activities.Design.pdb" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.RestAPI.pdb" />
+		</ItemGroup>
+		<ItemGroup>
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.dll" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.Activities.dll" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.Activities.Design.dll" />
+			<BuildOutputInPackage Include="$(OutputPath)UiPathTeam.SharePoint.RestAPI.dll" />
+			
+		</ItemGroup>
+	</Target>
+
+	<Target Name="RemoveMetaDll" AfterTargets="BuiltProjectOutputGroup">
+		<ItemGroup>
+			<BuiltProjectOutputGroupOutput Remove="@(BuiltProjectOutputGroupOutput)" />
+		</ItemGroup>
+	</Target>
+	
+	<Target Name="CleanPackageFiles" BeforeTargets="Build">
+		<Message Text="Deleting packages ..." />
+		<ItemGroup>
+			<PackageFilesToDelete Include="$(PackageOutputPath)\$(PackageId)*.nupkg" />
+		</ItemGroup>
+		<Delete Files="@(PackageFilesToDelete)" ContinueOnError="WarnAndContinue" />
+	</Target>
+	<PropertyGroup>
+		<IncludeReferencedProjects>false</IncludeReferencedProjects>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.Identity.Client" Version="4.70.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\UiPathTeam.SharePoint.Activities.Design\UiPathTeam.SharePoint.Activities.Design.csproj" />
+	</ItemGroup>
+	
+</Project>

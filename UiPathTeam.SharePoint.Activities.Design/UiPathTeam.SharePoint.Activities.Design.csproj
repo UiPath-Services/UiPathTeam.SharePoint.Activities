@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\..\..\..\Output\bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\..\..\Output\bin\Release\</OutputPath>
+  </PropertyGroup>
+  <!--<ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SharePointAssemblyInfo.cs">
+      <Link>Properties\SharePointAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>-->
+  <ItemGroup>
+    <Resource Include="Logo\sharepoint_logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.3" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="UiPath.Workflow.Runtime" Version="6.0.0-20220401-03" PrivateAssets="All">
+		  <TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="UiPath.Workflow" Version="6.0.0-20220401-03" PrivateAssets="All">
+		  <TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="System.Activities.Core.Presentation" Version="6.0.0-20220318.2" PrivateAssets="All" />
+		<PackageReference Include="System.Activities.Metadata" Version="6.0.0-20220318.2" PrivateAssets="All" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\UiPathTeam.SharePoint.Activities\UiPathTeam.SharePoint.Activities.csproj" />
+	  <ProjectReference Include="..\UiPathTeam.SharePoint\UiPathTeam.SharePoint.csproj" />
+	</ItemGroup>
+	<!--<Target Name="PostBuild" AfterTargets="Build">
+		<Exec Condition="'$(Configuration)' == 'Debug'"
+			  Command="&quot;$(SolutionDir).nuget\NuGet.exe&quot; pack &quot;$(MSBuildProjectFullPath)&quot; -IncludeReferencedProjects -Prop Configuration=$(Configuration)" />
+		<Exec Condition="'$(Configuration)' == 'Release'"
+			  Command="&quot;$(SolutionDir).nuget\NuGet.exe&quot; pack &quot;$(MSBuildProjectFullPath)&quot; -IncludeReferencedProjects -Prop Configuration=$(Configuration)" />
+	</Target>-->
+  <PropertyGroup>
+	  
+    <!--<PostBuildEvent>if $(ConfigurationName) == Debug "$(SolutionDir).nuget\NuGet.exe" pack "$(ProjectPath)"  -IncludeReferencedProjects -Prop Configuration=$(ConfigurationName)
+if $(ConfigurationName) == Release "$(SolutionDir).nuget\NuGet.exe" pack "$(ProjectPath)"  -IncludeReferencedProjects -Prop Configuration=$(ConfigurationName)</PostBuildEvent>-->
+  </PropertyGroup>
+</Project>

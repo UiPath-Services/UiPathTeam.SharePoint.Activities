@@ -1,0 +1,92 @@
+﻿<sap:ActivityDesigner x:Class="UiPathTeam.SharePoint.Activities.Design.ProcessUsers"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:swc="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:design="clr-namespace:UiPathTeam.SharePoint.Activities.Design">
+
+    <sap:ActivityDesigner.Resources>
+        <sapc:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <design:VisibilityConverter x:Key="VisibilityConverter" />
+        <design:VisibilityReverseConverter x:Key="VisibilityReverseConverter" />
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  MinWidth="110"/>
+                        <ColumnDefinition  Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Name="UserEmail" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="User Email:" 
+                            Grid.Row ="0" Grid.Column="0" Height="16" Margin="2,5" Width="100" 
+                            Visibility="{Binding Path=ModelItem.ShowGroupName, Converter={StaticResource VisibilityReverseConverter}}"/>
+                    
+                    <sapv:ExpressionTextBox Name="GroupName"
+                            Expression="{Binding Path=ModelItem.GroupName, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="Group Name"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" MinWidth="100" Grid.Row="0" Grid.Column="0" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowGroupName, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <sapv:ExpressionTextBox Name="UserName"
+                            Expression="{Binding Path=ModelItem.User, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="User Email or full name"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="0" Grid.Column="1" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowUserName, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <sapv:ExpressionTextBox Name="GroupDescription"
+                            Expression="{Binding Path=ModelItem.GroupDescription, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="Group Description"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="0" Grid.Column="1" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowGroupDescription, Converter={StaticResource VisibilityConverter}}"/>
+
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Collapsed">
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" FontStyle="Italic" Foreground="#787878" >Double click to view</TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="30,30" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="../Logo/sharepoint_logo.ico" />
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+</sap:ActivityDesigner>

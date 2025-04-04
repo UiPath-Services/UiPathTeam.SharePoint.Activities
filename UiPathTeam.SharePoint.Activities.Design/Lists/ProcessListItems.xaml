@@ -1,0 +1,124 @@
+﻿<sap:ActivityDesigner x:Class="UiPathTeam.SharePoint.Activities.Design.ProcessListItems"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:swc="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:design="clr-namespace:UiPathTeam.SharePoint.Activities.Design">
+
+    <sap:ActivityDesigner.Resources>
+        <sapc:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <swc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <design:VisibilityConverter x:Key="VisibilityConverter" />
+        
+        <Style x:Key="ClickableLabel" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="#5287B4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+        </Style>
+        
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="105"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Name="ListNameLabel" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="List Name:" 
+                            Grid.Row ="0" Grid.Column="0" Height="16" Margin="2,5" Width="100"
+                            Visibility="{Binding Path=ModelItem.ShowListName, Converter={StaticResource VisibilityConverter}}"/>
+                    <sapv:ExpressionTextBox Name="ListName"
+                            Expression="{Binding Path=ModelItem.ListName, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="Internal list name"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="0" Grid.Column="1" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowListName, Converter={StaticResource VisibilityConverter}}"/>
+
+
+                    <StackPanel Orientation="Vertical" Grid.Row ="3" Grid.Column="0" Grid.ColumnSpan="2" Width="200">
+                        <Label x:Name="Attachments" HorizontalAlignment="Center" Content="{Binding Path=ModelItem.AttachmentsAction}" Style="{StaticResource ClickableLabel}"
+                            Visibility="{Binding Path=ModelItem.ShowAttachFiles, Converter={StaticResource VisibilityConverter}}"     MouseDown="AttachFiles_MouseDown" />
+                    </StackPanel>
+                   
+                    
+                    <TextBlock Name="PropertiesDictionaryLabel" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="Prop Dictionary:" 
+                            Grid.Row ="1" Grid.Column="0" Height="16" Margin="2,5" Width="100"
+                            Visibility="{Binding Path=ModelItem.ShowPropertiesDictionary, Converter={StaticResource VisibilityConverter}}"/>
+                    <sapv:ExpressionTextBox Name="PropertiesDictionary"
+                            Expression="{Binding Path=ModelItem.PropertiesToAdd, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            HintText="The properties dictionary to use"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="1" Grid.Column="1" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowPropertiesDictionary, Converter={StaticResource VisibilityConverter}}"/>
+                    <sapv:ExpressionTextBox 
+                    Name="CAMLQuery"
+                            Expression="{Binding Path=ModelItem.CAMLQuery, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="CAML Query used at selecting the elements to be processed"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="300" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MaxLines="4"
+                            Height="60"  AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                            Visibility="{Binding Path=ModelItem.ShowCAMLQuery, Converter={StaticResource VisibilityConverter}}"/>
+                    <StackPanel Orientation="Vertical" Grid.Row ="3" Grid.Column="0" Grid.ColumnSpan="2" Width="280">
+                        <TextBlock Name="CAMLWarning" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Center" 
+                               Text="Make sure you test the CAML query in a 'Read List Items' activity before using it to delete/update list items" 
+                               Margin="2,1" Foreground="DarkOrange" TextWrapping="WrapWithOverflow" Height="27" FontSize="11"
+                               Visibility="{Binding Path=ModelItem.ShowCAMLWarning, Converter={StaticResource VisibilityConverter}}"    />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Row ="4" Grid.Column="0" Grid.ColumnSpan="2" Width="280">
+                        <TextBlock Name="Warning" HorizontalAlignment="Left" TextAlignment="Left" VerticalAlignment="Center" 
+                               Text="If the CAMLQuery is empty or null this operation will affect all list items!" 
+                               Margin="2,5" Foreground="Red" TextWrapping="WrapWithOverflow" Height="27" FontSize="11"
+                               Visibility="{Binding Path=ModelItem.AllowOperationOnAllItems, Converter={StaticResource VisibilityConverter}}"    />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Collapsed">
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" FontStyle="Italic" Foreground="#787878" >Double click to view</TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+    
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="30,30" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="../Logo/sharepoint_logo.ico" />
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+</sap:ActivityDesigner>

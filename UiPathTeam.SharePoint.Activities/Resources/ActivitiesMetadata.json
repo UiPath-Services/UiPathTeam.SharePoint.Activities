@@ -1,0 +1,13 @@
+{
+  "resourceManagerName": "UiPathTeam.SharePoint.Activities.Resources.Resources",
+  "activities": [
+    {
+      "fullName": "UiPathTeam.SharePoint.Activities.ActivityTemplate",
+      "shortName": "Template",
+      "displayNameKey": "ActivityTemplate_DisplayName",
+      "descriptionKey": "ActivityTemplate_Description",
+      "categoryKey": "Templates",
+      "viewModelType": "UiPathTeam.SharePoint.Activities.ViewModels.ActivityTemplateViewModel"
+    }
+  ]
+}

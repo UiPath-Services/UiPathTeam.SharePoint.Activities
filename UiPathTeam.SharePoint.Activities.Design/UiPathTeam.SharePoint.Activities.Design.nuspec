@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$title$</id>
+    <version>$version$</version>
+    <title>SharePoint Activities Package</title>
+    <authors>Radu Bucur, Diana Mincu</authors>
+    <owners>Radu Bucur, Diana Mincu</owners>
+    <projectUrl>https://go.uipath.com/</projectUrl>
+    <iconUrl>https://gallery.uipath.com/images?url=http://www.uipath.com/hubfs/Logos/uipath-nuget-logo.png</iconUrl>
+    <language></language>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <summary>Integration between SharePoint and UiPath.</summary>
+    <releaseNotes>First release of the package.</releaseNotes>
+    <tags>SharePoint, Activities, Package, Lists, Libraries, Permissions, Users, Groups</tags>
+  </metadata>
+</package>
+
+
+

@@ -1,0 +1,101 @@
+﻿<sap:ActivityDesigner x:Class="UiPathTeam.SharePoint.Activities.Design.ProcessPermissions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sa="clr-namespace:System.Activities;assembly=System.Activities"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:swc="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
+    xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:msc="clr-namespace:UiPathTeam.SharePoint.RestAPI.Services;assembly=UiPathTeam.SharePoint.RestAPI"
+    xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:design="clr-namespace:UiPathTeam.SharePoint.Activities.Design">
+
+    <sap:ActivityDesigner.Resources>
+        <sapc:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+        <swc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        
+        <design:VisibilityConverter x:Key="VisibilityConverter" />
+        <design:VisibilityReverseConverter x:Key="VisibilityReverseConverter" />
+        <ObjectDataProvider x:Key="enumValues"
+            MethodName="GetValues" ObjectType="{x:Type s:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="msc:RoleType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <DataTemplate x:Key="Expanded">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="120"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Name="ListNameLabel" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="List Name:" 
+                            Grid.Row ="0" Grid.Column="0" Height="16" Margin="2,5" Width="100"
+                            Visibility="{Binding Path=ModelItem.ShowListName, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <sapv:ExpressionTextBox Name="ListName"
+                            Expression="{Binding Path=ModelItem.ListName, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            ExpressionType="s:String"
+                            HintText="Internal list name"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="0" Grid.Column="1" MaxLines="0" 
+                            Visibility="{Binding Path=ModelItem.ShowListName, Converter={StaticResource VisibilityConverter}}"/>
+                    <ComboBox 
+                            ItemsSource="{Binding Source={StaticResource enumValues}}" 
+                            SelectedValue="{Binding Path=ModelItem.PermissionToGive, Mode=TwoWay}"  
+                            Grid.Row="1" Grid.Column="0" Width="110" Height="20"
+                            Visibility="{Binding Path=ModelItem.ShowPermissionDropdown, Converter={StaticResource VisibilityConverter}}"/>
+
+                    <TextBlock Name="UserGroupLabel" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Text="User/Group" 
+                            Grid.Row ="1" Grid.Column="0" Height="16" Margin="2,5" Width="100"
+                            Visibility="{Binding Path=ModelItem.ShowPermissionDropdown, Converter={StaticResource VisibilityReverseConverter}}"/>
+                    
+                    <sapv:ExpressionTextBox Name="UserGroupName"
+                            Expression="{Binding Path=ModelItem.Receiver, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In }"
+                            HintText="User/Group"
+                            OwnerActivity="{Binding Path=ModelItem}"
+                            Margin="5" Width="170" Grid.Row="1" Grid.Column="1" MaxLines="0" />
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Collapsed">
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" FontStyle="Italic" Foreground="#787878" >Double click to view</TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ShowExpanded}" Value="true">
+                    <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </sap:ActivityDesigner.Resources>
+    <Grid>
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" />
+    </Grid>
+
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="30,30" ></Rect>
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="../Logo/sharepoint_logo.ico" />
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+    
+</sap:ActivityDesigner>

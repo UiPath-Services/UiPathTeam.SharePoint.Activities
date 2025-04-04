@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="UiPathTeam.SharePoint.Activities.Design.Editors.EditorTemplates"
+                    xmlns:PropertyEditing="clr-namespace:System.Activities.Presentation.PropertyEditing;assembly=System.Activities.Presentation"
+                    xmlns:src="clr-namespace:UiPathTeam.SharePoint.Activities.Design.Editors">
+
+
+    <DataTemplate x:Key="ArgumentDictionaryEditor">
+        <DockPanel LastChildFill="True">
+            <TextBlock Text="(Collection)" TextTrimming="CharacterEllipsis" IsEnabled="False"/>
+            <PropertyEditing:EditModeSwitchButton TargetEditMode="Dialog" HorizontalAlignment="Right" DockPanel.Dock="Right" />
+        </DockPanel>
+    </DataTemplate>
+
+</ResourceDictionary>
