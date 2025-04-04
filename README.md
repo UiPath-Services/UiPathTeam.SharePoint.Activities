@@ -55,3 +55,6 @@ If your project is using `Get List Items` activity, you might see some error ico
 ![GetList1](assets/get_list_items_activity.png)
 <br>
 ![GetList2](assets/get_list_items_activity_err.png)
+
+### 3. QueryGrouping Is Not Supported
+During testing QueryGrouping with the old package version 1.7, it was noticed that QueryGrouping was not implemented. Thus, we did not implement batching in the new packages since existing clients probably are not using it. The Property QueryGrouping was kept visiable on the properties panel to avoid any migration issue.
