@@ -56,3 +56,16 @@ ehthumbs.db
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 /Tests/UiPathTeam.SharePoint.RestAPI.Tests/secrets.json
+
+
+*.Cache
+ClientBin/
+[Ss]tyle[Cc]op.*
+~$*
+*~
+*.dbmdl
+*.[Pp]ublish.xml
+*.pfx
+*.publishsettings
+modulesbin/
+tempbin/
