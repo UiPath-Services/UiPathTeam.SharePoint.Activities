@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="ViewModel\" />
+    <Folder Include="Workflow\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,11 +19,23 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="UiPath.Activities.Api" Version="22.4.1" developmentDependency="true" />
+	  <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.Identity.Client" Version="4.70.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="UiPath.Credentials.Activities" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\UiPathTeam.SharePoint.Activities.Design\UiPathTeam.SharePoint.Activities.Design.csproj" />
     <ProjectReference Include="..\..\UiPathTeam.SharePoint.Activities\UiPathTeam.SharePoint.Activities.csproj" />
+    <ProjectReference Include="..\..\UiPathTeam.SharePoint\UiPathTeam.SharePoint.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestAllActivities.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

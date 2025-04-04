@@ -1,0 +1,669 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="1657,2044" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:p="http://schemas.uipath.com/workflow/activities/credentials" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ss="clr-namespace:System.Security;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:us="clr-namespace:UiPathTeam.SharePoint;assembly=UiPathTeam.SharePoint" xmlns:us1="clr-namespace:UiPathTeam.SharePoint;assembly=UiPathTeam.SharePoint.RestAPI" xmlns:usa="clr-namespace:UiPathTeam.SharePoint.Activities;assembly=UiPathTeam.SharePoint.Activities" xmlns:usal="clr-namespace:UiPathTeam.SharePoint.Activities.Lists;assembly=UiPathTeam.SharePoint.Activities" xmlns:usal1="clr-namespace:UiPathTeam.SharePoint.Activities.Libraries;assembly=UiPathTeam.SharePoint.Activities" xmlns:usap="clr-namespace:UiPathTeam.SharePoint.Activities.Permissions;assembly=UiPathTeam.SharePoint.Activities" xmlns:usau="clr-namespace:UiPathTeam.SharePoint.Activities.Users;assembly=UiPathTeam.SharePoint.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPathTeam.SharePoint</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>Microsoft.SharePoint.Client</x:String>
+      <x:String>UiPathTeam.SharePoint.Activities</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>UiPathTeam.SharePoint.Activities.Lists</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>UiPathTeam.SharePoint.Activities.Users</x:String>
+      <x:String>UiPathTeam.SharePoint.Activities.Permissions</x:String>
+      <x:String>System.Runtime.CompilerServices</x:String>
+      <x:String>UiPathTeam.SharePoint.Activities.Libraries</x:String>
+      <x:String>CredentialManagement</x:String>
+      <x:String>UiPath.Credentials.Activities</x:String>
+      <x:String>System.Net</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>System.Linq.Expressions</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>UiPathTeam.SharePoint</AssemblyReference>
+      <AssemblyReference>OfficeDevPnP.Core</AssemblyReference>
+      <AssemblyReference>Microsoft.SharePoint.Client</AssemblyReference>
+      <AssemblyReference>Microsoft.SharePoint.Client.Runtime</AssemblyReference>
+      <AssemblyReference>UiPathTeam.SharePoint.Activities</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities.Design</AssemblyReference>
+      <AssemblyReference>System.Reflection.Metadata</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices.RuntimeInformation</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.UIAutomationNext</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
+      <AssemblyReference>System.Threading.Tasks.Extensions</AssemblyReference>
+      <AssemblyReference>System.Runtime.CompilerServices.Unsafe</AssemblyReference>
+      <AssemblyReference>netstandard</AssemblyReference>
+      <AssemblyReference>CredentialManagement</AssemblyReference>
+      <AssemblyReference>UiPath.Credentials.Activities</AssemblyReference>
+      <AssemblyReference>UiPathTeam.SharePoint.RestAPI</AssemblyReference>
+      <AssemblyReference>System.Memory.Data</AssemblyReference>
+      <AssemblyReference>System.Console</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Security.Permissions</AssemblyReference>
+      <AssemblyReference>System.Configuration.ConfigurationManager</AssemblyReference>
+      <AssemblyReference>System.ComponentModel</AssemblyReference>
+      <AssemblyReference>System.Private.Uri</AssemblyReference>
+      <AssemblyReference>System.Private.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.Private.DataContractSerialization</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Formatters</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.Collections</AssemblyReference>
+      <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+      <AssemblyReference>System.Net.Primitives</AssemblyReference>
+      <AssemblyReference>System.Net.HttpListener</AssemblyReference>
+      <AssemblyReference>System.Net.WebProxy</AssemblyReference>
+      <AssemblyReference>System.Net.NameResolution</AssemblyReference>
+      <AssemblyReference>System.Net.WebClient</AssemblyReference>
+      <AssemblyReference>System.Net.Requests</AssemblyReference>
+      <AssemblyReference>System.Net.ServicePoint</AssemblyReference>
+      <AssemblyReference>System.Net.WebHeaderCollection</AssemblyReference>
+      <AssemblyReference>System.Linq.Expressions</AssemblyReference>
+      <AssemblyReference>System.Data.SqlClient</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.EventBasedAsync</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Primitives</AssemblyReference>
+      <AssemblyReference>System.Private.Xml</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1166,4859" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="ss:SecureString" Name="OnPremUserPassword" />
+      <Variable x:TypeArguments="x:String" Name="OnPremUsername" />
+      <Variable x:TypeArguments="ss:SecureString" Name="OnlineUserPassword" />
+      <Variable x:TypeArguments="x:String" Name="OnlineUsername" />
+      <Variable x:TypeArguments="ss:SecureString" Name="OnlineAppOnlyClientSecret" />
+      <Variable x:TypeArguments="x:String" Name="OnlineAppOnlyClientID" />
+      <Variable x:TypeArguments="x:String" Name="OnlineAzureAppID" />
+      <Variable x:TypeArguments="x:String" Name="OnlineAppOnlySite" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence DisplayName="Get Credentials" sap:VirtualizedContainerService.HintSize="552,643" sap2010:WorkflowViewState.IdRef="Sequence_32">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <p:GetSecureCredential CredentialType="Generic" DisplayName="Get Secure Credentials-Online User" sap:VirtualizedContainerService.HintSize="416,112" sap2010:WorkflowViewState.IdRef="GetSecureCredential_1" Password="[OnlineUserPassword]" PersistanceType="LocalComputer" Target="SP_ONLINE_USER" Username="[OnlineUsername]" />
+      <p:GetSecureCredential CredentialType="Generic" DisplayName="Get Secure Credentials-OnPrem User" sap:VirtualizedContainerService.HintSize="416,112" sap2010:WorkflowViewState.IdRef="GetSecureCredential_2" Password="[OnPremUserPassword]" PersistanceType="LocalComputer" Target="SP_ONPREM_USER" Username="[OnPremUsername]" />
+      <p:GetSecureCredential CredentialType="Generic" DisplayName="Get Secure Credentials-AppOnly ClientID &amp; SEcret" sap:VirtualizedContainerService.HintSize="416,112" sap2010:WorkflowViewState.IdRef="GetSecureCredential_3" Password="[OnlineAppOnlyClientSecret]" PersistanceType="LocalComputer" Target="SP_ONLINE_AZURE_APPONLY" Username="[OnlineAppOnlyClientID]" />
+      <p:GetSecureCredential Password="{x:Null}" CredentialType="Generic" DisplayName="Get Secure Credentials-AzureApp" sap:VirtualizedContainerService.HintSize="416,112" sap2010:WorkflowViewState.IdRef="GetSecureCredential_4" PersistanceType="LocalComputer" Target="SP_ONLINE_AZURE_APP" Username="[OnlineAzureAppID]" />
+      <p:GetSecureCredential Password="{x:Null}" CredentialType="Generic" DisplayName="Get Secure Credentials-AzureApp" sap:VirtualizedContainerService.HintSize="416,103" sap2010:WorkflowViewState.IdRef="GetSecureCredential_5" PersistanceType="LocalComputer" Target="ONLINE_APPONLY_SITE" Username="[OnlineAppOnlySite]" />
+    </Sequence>
+    <Sequence DisplayName="Test Login Modes" sap:VirtualizedContainerService.HintSize="552,2314" sap2010:WorkflowViewState.IdRef="Sequence_34">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" sap2010:Annotation.AnnotationText="LoginMode: Online&#xA;" AzureAppPermissions="None" DisplayName="Sharepoint application scope-Online" sap:VirtualizedContainerService.HintSize="450,671" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_6" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SecurePassword="[OnlineUserPassword]" SharePointInstanceType="Online" URL="https://abumayar.sharepoint.com/sites/IT" UserName="[OnlineUsername]">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,454" sap2010:WorkflowViewState.IdRef="Sequence_21">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZone" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,173" sap2010:WorkflowViewState.IdRef="LogMessage_22" Message="[&quot;Started&quot;]" />
+              <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_4" SharePointTimeZone="[SPTimeZone]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_18" Message="[&quot;TimeZone is : &quot; + SPTimeZone.Description]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" sap2010:Annotation.AnnotationText="LoginMode: AzureApp" AzureAppPermissions="FullControl" AzureApplicationID="[OnlineAzureAppID]" DisplayName="Sharepoint application scope-AzureApp" sap:VirtualizedContainerService.HintSize="450,487" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_5" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SecurePassword="[OnlineUserPassword]" SharePointInstanceType="AzureApp" URL="https://abumayar.sharepoint.com/sites/IT" UserName="[OnlineUsername]">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,281" sap2010:WorkflowViewState.IdRef="Sequence_20">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZ" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_3" SharePointTimeZone="[SPTimeZ]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_17" Message="[&quot;TimeZone is : &quot; + SPTimeZ.Description]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" SecurePassword="{x:Null}" UserName="{x:Null}" sap2010:Annotation.AnnotationText="LoginMode: AppOnly" AzureAppPermissions="None" ClientId="[OnlineAppOnlyClientID]" ClientSecret="[new NetworkCredential(&quot;&quot;, OnlineAppOnlyClientSecret).Password]" DisplayName="Sharepoint application scope-AppOnly" sap:VirtualizedContainerService.HintSize="450,487" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_7" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SharePointInstanceType="AppOnly" URL="[OnlineAppOnlySite]">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,281" sap2010:WorkflowViewState.IdRef="Sequence_22">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZ" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_5" SharePointTimeZone="[SPTimeZ]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_19" Message="[&quot;TimeZone is : &quot; + SPTimeZ.Description]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" SecurePassword="{x:Null}" UserName="{x:Null}" sap2010:Annotation.AnnotationText="LoginMode: WebLogin&#xA;" AzureAppPermissions="None" DisplayName="Sharepoint application scope-WebLogin" sap:VirtualizedContainerService.HintSize="450,498" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_8" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SharePointInstanceType="WebLogin" URL="https://abumayar.sharepoint.com/sites/IT">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,281" sap2010:WorkflowViewState.IdRef="Sequence_23">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZ" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_6" SharePointTimeZone="[SPTimeZ]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_20" Message="[&quot;TimeZone is : &quot; + SPTimeZ.Description]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" sap2010:Annotation.AnnotationText="LoginMode: OnPrem" AzureAppPermissions="FullControl" DisplayName="Sharepoint application scope-OnPrem" sap:VirtualizedContainerService.HintSize="450,79" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_9" PlatformType="Server" QueryGrouping="False" ResetCredentials="False" SecurePassword="[OnPremUserPassword]" SharePointInstanceType="OnPremises" URL="http://sharepoing19/sites/HR/" UserName="[OnPremUsername]">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,281" sap2010:WorkflowViewState.IdRef="Sequence_24">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZ" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_7" SharePointTimeZone="[SPTimeZ]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_21" Message="[&quot;TimeZone is : &quot; + SPTimeZ.Description]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+    </Sequence>
+    <Sequence DisplayName="Test All Activities" sap:VirtualizedContainerService.HintSize="552,1879" sap2010:WorkflowViewState.IdRef="Sequence_26">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" sap2010:Annotation.AnnotationText="Test All Activities&#xA;" AzureAppPermissions="Read, Write" DisplayName="Sharepoint application scope" sap:VirtualizedContainerService.HintSize="518,809" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_1" PlatformType="Server" QueryGrouping="False" ResetCredentials="False" SecurePassword="[OnPremUserPassword]" SharePointInstanceType="OnPremises" URL="http://win-igsiph0j410/sites/testsite2/" UserName="[OnPremUsername]">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="484,592" sap2010:WorkflowViewState.IdRef="Sequence_2">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:Int32" Name="ItemID" />
+                <Variable x:TypeArguments="x:Int32" Name="NumberOfLinesUpdated" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <Sequence DisplayName="List tests" sap:VirtualizedContainerService.HintSize="450,57" sap2010:WorkflowViewState.IdRef="Sequence_10">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="x:String" Name="ListName" />
+                  <Variable x:TypeArguments="s:String[]" Name="AttachList" />
+                  <Variable x:TypeArguments="x:String" Name="CamlQuery" />
+                  <Variable x:TypeArguments="x:Int32" Name="NoOfAttDeleted" />
+                  <Variable x:TypeArguments="sd:DataTable" Name="ListItemDT" />
+                </Sequence.Variables>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign sap:VirtualizedContainerService.HintSize="434,114" sap2010:WorkflowViewState.IdRef="Assign_1">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[ListName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">test_list</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal:AddListItem AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AddedItemID="[ItemID]" ChooseFile="False" DisplayName="Add list item" sap:VirtualizedContainerService.HintSize="434,140" sap2010:WorkflowViewState.IdRef="AddListItem_1" ListName="[ListName]" PropertiesToAdd="[New Dictionary(Of String, Object) From {&#xA;    {&quot;Title&quot;, &quot;Integration Test Item_&quot; + DateTime.Now.ToString(&quot;yyyyMMdd_HHmm&quot;)}&#xA;}]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="True" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_1" Message="[&quot;Added Item ID: &quot; + ItemID.ToString]" />
+                <usal:AddListItemAttachments AttachmentsCollection="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AttachmentsAction="AttachFiles" ChooseFile="False" DisplayName="Add List Item Attachments" sap:VirtualizedContainerService.HintSize="434,129" sap2010:WorkflowViewState.IdRef="AddListItemAttachments_1" ListItemID="[ItemID]" ListName="[ListName]" ShowAttachFiles="True" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False">
+                  <usal:AddListItemAttachments.Attachments>
+                    <scg:List x:TypeArguments="InArgument(x:String)" Capacity="4">
+                      <InArgument x:TypeArguments="x:String">C:\Users\Abdullah.Al-Awlaqi\Downloads\lec2.universal (2).pdf</InArgument>
+                    </scg:List>
+                  </usal:AddListItemAttachments.Attachments>
+                </usal:AddListItemAttachments>
+                <usal:GetListItemAttachments AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AttachmentNames="[AttachList]" ChooseFile="False" DisplayName="Get list item attachments" sap:VirtualizedContainerService.HintSize="434,57" sap2010:WorkflowViewState.IdRef="GetListItemAttachments_1" ListItemID="[ItemID]" ListName="[ListName]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_3" Message="[&quot;No of attachments: &quot; + AttachList.Count.ToString]" />
+                <Assign sap:VirtualizedContainerService.HintSize="434,114" sap2010:WorkflowViewState.IdRef="Assign_3">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[CamlQuery]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[string.Format("&lt;View&gt;&lt;Query&gt;&lt;Where&gt;&lt;Eq&gt;&lt;FieldRef Name='ID' /&gt;&lt;Value Type='Number'&gt;{0}&lt;/Value&gt;&lt;/Eq&gt;&lt;/Where&gt;&lt;/Query&gt;&lt;/View&gt;", ItemID)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal:ReadListItems AttachmentsAction="{x:Null}" ItemsDictArray="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" CAMLQuery="[CamlQuery]" ChooseFile="False" DisplayName="Get List Items" sap:VirtualizedContainerService.HintSize="434,174" sap2010:WorkflowViewState.IdRef="ReadListItems_2" ItemsTable="[ListItemDT]" ListName="[ListName]" ShowAttachFiles="False" ShowCAMLQuery="True" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_5" Message="[&quot;Get List Items : &quot; + ListItemDT.Rows.Count.ToString]" />
+                <usal:UpdateListItems AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOperationOnAllItems="False" CAMLQuery="[CamlQuery]" ChooseFile="False" DisplayName="Update list items" sap:VirtualizedContainerService.HintSize="434,206" sap2010:WorkflowViewState.IdRef="UpdateListItems_1" ListName="[ListName]" NumberOfItemsProcessedAtOnce="3" NumberOfRowsAffected="[NumberOfLinesUpdated]" PropertiesToAdd="[new Dictionary(Of String, Object) from {{&quot;Title&quot;, &quot;item udpated_&quot; + DateTime.Now.ToShortTimeString()}}]" ShowAttachFiles="False" ShowCAMLQuery="True" ShowCAMLWarning="True" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="True" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_6" Message="[&quot;Update list items: Number of updated lines  : &quot; + NumberOfLinesUpdated.ToString]" />
+                <usal:DeleteListItems AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" NumberOfItemsProcessedAtOnce="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOperationOnAllItems="False" CAMLQuery="[CamlQuery]" ChooseFile="False" DisplayName="Delete list items" sap:VirtualizedContainerService.HintSize="434,171" sap2010:WorkflowViewState.IdRef="DeleteListItems_1" ListName="[ListName]" NumberOfRowsAffected="[NoOfAttDeleted]" ShowAttachFiles="False" ShowCAMLQuery="True" ShowCAMLWarning="True" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_4" Message="[&quot;No of deleted attachments: &quot; + NoOfAttDeleted.ToString]" />
+              </Sequence>
+              <Sequence DisplayName="Users" sap:VirtualizedContainerService.HintSize="450,57" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="x:String" Name="GroupName" />
+                  <Variable x:TypeArguments="us1:User" sap2010:Annotation.AnnotationText="Type 'msc:User' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPUser" />
+                  <Variable x:TypeArguments="x:Int32" Name="SPUserID" />
+                  <Variable x:TypeArguments="scg:List(us1:User)" sap2010:Annotation.AnnotationText="Type 'msc:User' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="GroupUsers" />
+                  <Variable x:TypeArguments="x:String" Name="UserName" />
+                  <Variable x:TypeArguments="x:String" Name="ssss" />
+                  <Variable x:TypeArguments="x:String" Name="variable1" />
+                </Sequence.Variables>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign sap:VirtualizedContainerService.HintSize="434,114" sap2010:WorkflowViewState.IdRef="Assign_4">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[GroupName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">["Test Group_" + DateTime.Now.ToString("yyyyMMdd_HHmmss")]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap:VirtualizedContainerService.HintSize="434,114" sap2010:WorkflowViewState.IdRef="Assign_5">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[UserName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">fahad</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usau:CreateGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Create group" GroupDescription="just some description" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="CreateGroup_1" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <usau:GetUser AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get user" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="GetUser_1" SharePointUser="[SPUser]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="True" User="[UserName]" UserID="[SPUserID]" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_7" Message="[&quot;Get user: User ID: &quot; + SPUserID.ToString]" />
+                <usau:AddUserToGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Add user to group" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="AddUserToGroup_1" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="True" User="[UserName]" />
+                <usau:GetAllUsersFromGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get all users from group" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="GetAllUsersFromGroup_2" Result="[GroupUsers]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_8" Message="[&quot;Number of Users in the group : &quot; + GroupUsers.Count.ToString]" />
+                <usau:RemoveUserFromGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Remove user from group" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="RemoveUserFromGroup_1" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="True" User="[UserName]" />
+                <usau:GetAllUsersFromGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get all users from group" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,104" sap2010:WorkflowViewState.IdRef="GetAllUsersFromGroup_3" Result="[GroupUsers]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,173" sap2010:WorkflowViewState.IdRef="LogMessage_9" Message="[&quot;Number of Users in the group after removing : &quot; + GroupUsers.Count.ToString]" />
+                <usau:DeleteGroup AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Delete group" GroupName="[GroupName]" sap:VirtualizedContainerService.HintSize="434,72" sap2010:WorkflowViewState.IdRef="DeleteGroup_1" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="True" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              </Sequence>
+              <Sequence DisplayName="permissions" sap:VirtualizedContainerService.HintSize="450,57" sap2010:WorkflowViewState.IdRef="Sequence_9">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="scg:List(s:Tuple(x:String, x:String))" Name="PermissionsTuple" />
+                  <Variable x:TypeArguments="x:String" Name="ListName" />
+                </Sequence.Variables>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_6">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[ListName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">test_list</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usap:AddPermission AttachmentsAction="{x:Null}" FolderPath="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Add permission" sap:VirtualizedContainerService.HintSize="434,107" sap2010:WorkflowViewState.IdRef="AddPermission_1" IsUser="True" ListName="[ListName]" ListType="List" PermissionToGive="Reader" Receiver="[&quot;fahad&quot;]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="True" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <usap:GetPermissions AttachmentsAction="{x:Null}" FolderPath="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get permissions" sap:VirtualizedContainerService.HintSize="434,25" sap2010:WorkflowViewState.IdRef="GetPermissions_1" ListName="[ListName]" ListType="List" Result="[PermissionsTuple]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,92" sap2010:WorkflowViewState.IdRef="LogMessage_23" Message="[&quot;Permissions Count: &quot; + PermissionsTuple.Count.ToString]" />
+                <usap:RemovePermission AttachmentsAction="{x:Null}" FolderPath="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Remove permission" sap:VirtualizedContainerService.HintSize="434,107" sap2010:WorkflowViewState.IdRef="RemovePermission_1" IsUser="True" ListName="[ListName]" ListType="List" Receiver="[&quot;fahad&quot;]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="True" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+              </Sequence>
+              <Sequence DisplayName="Libraries" sap:VirtualizedContainerService.HintSize="450,57" sap2010:WorkflowViewState.IdRef="Sequence_12">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="x:String" Name="LibraryName" />
+                  <Variable x:TypeArguments="x:String" Name="FolderPath" />
+                  <Variable x:TypeArguments="x:String" Name="SampleFile" />
+                  <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Name="SomeProps" />
+                  <Variable x:TypeArguments="x:String" Name="UploadFileRelativeUrl" />
+                  <Variable x:TypeArguments="x:String" Name="DownloadedFilePath" />
+                  <Variable x:TypeArguments="s:String[]" Name="ChildsNames" />
+                  <Variable x:TypeArguments="x:String" Name="NewFolderPath" />
+                  <Variable x:TypeArguments="x:String" Name="NewFileName" />
+                  <Variable x:TypeArguments="x:String" Name="FolderName" />
+                  <Variable x:TypeArguments="x:String" Name="NewFolderName" />
+                </Sequence.Variables>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="479,25" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[LibraryName]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">Documents</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[FolderName]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">["folder1" + DateTime.Now.ToString("yyyyMMdd_HHmmss")]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[SampleFile]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[Path.GetFullPath("sample_file.txt")]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_4">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[SomeProps]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[New Dictionary(Of String, Object)]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:MultipleAssign>
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_7">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[FolderPath]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}", "Shared Documents", FolderName)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_12">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[UploadFileRelativeUrl]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}", FolderPath, Path.GetFileName(SampleFile))]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal1:CreateFolder AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Create folder" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="CreateFolder_1" LibraryName="[LibraryName]" RelativeUrl="[FolderName]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="True" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:UploadFile AttachmentsAction="{x:Null}" PropertiesToAdd="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOperationsOnASPXFiles="False" AllowOverwrite="True" CheckInFileAfterCreation="False" CheckOutFileBeforeOverwrite="False" ChooseFile="True" DisplayName="Upload file" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="UploadFile_1" LocalPath="sample_file.txt" LocalPathHintText="The current local path of the file" RelativeUrl="[FolderPath]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="True" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_8">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[DownloadedFilePath]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[SampleFile.Replace(".txt", datetime.Now.ToString("yyyyMMdd_HHmmss")+".txt")]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal1:GetFile AttachmentsAction="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get file" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="GetFile_1" LocalPath="[DownloadedFilePath]" LocalPathHintText="Local path where the file will be saved" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="True" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:CheckInFile AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Check in file" sap:VirtualizedContainerService.HintSize="479,72" sap2010:WorkflowViewState.IdRef="CheckInFile_1" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:CheckOutFile AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Check out file" sap:VirtualizedContainerService.HintSize="479,72" sap2010:WorkflowViewState.IdRef="CheckOutFile_1" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:DiscardCheckout AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Discard checkout" sap:VirtualizedContainerService.HintSize="479,72" sap2010:WorkflowViewState.IdRef="DiscardCheckout_1" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:GetChildrenNames AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChildrenNames="[ChildsNames]" ChooseFile="False" DisplayName="Get children names" sap:VirtualizedContainerService.HintSize="479,72" sap2010:WorkflowViewState.IdRef="GetChildrenNames_1" RelativeUrl="[FolderPath]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_10">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[NewFileName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[Path.GetFileName(SampleFile.Replace(".txt", datetime.Now.ToString("yyyyMMdd_HHmmss")+"_renamed.txt"))]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal1:RenameItem AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Rename item" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="RenameItem_1" NewName="[NewFileName]" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="True" ShowUserName="False" />
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_11">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[UploadFileRelativeUrl]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}", FolderPath, NewFileName)]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_13">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[NewFolderName]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">["folder1" + DateTime.Now.ToString("yyyyMMdd_HHmmss")]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <Assign sap:VirtualizedContainerService.HintSize="479,82" sap2010:WorkflowViewState.IdRef="Assign_9">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[NewFolderPath]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">["/sites/testsite2/Shared Documents/" + NewFolderName]</InArgument>
+                  </Assign.Value>
+                </Assign>
+                <usal1:CreateFolder AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Create folder" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="CreateFolder_2" LibraryName="[LibraryName]" RelativeUrl="[NewFolderName]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="True" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:MoveItem AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOverwrite="True" ChooseFile="False" DestinationRelativeUrl="[NewFolderPath]" DisplayName="Move item" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="MoveItem_1" RelativeUrl="[UploadFileRelativeUrl]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="True" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:Delete AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOperationsOnASPXFiles="False" ChooseFile="False" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="Delete_1" LibraryName="Shared Documents" RelativeUrl="[NewFolderName]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="True" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+                <usal1:Delete AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" AllowOperationsOnASPXFiles="False" ChooseFile="False" sap:VirtualizedContainerService.HintSize="479,107" sap2010:WorkflowViewState.IdRef="Delete_2" LibraryName="Shared Documents" RelativeUrl="[FolderName]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="True" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="True" ShowRename="False" ShowUserName="False" />
+              </Sequence>
+              <Sequence DisplayName="Others" sap:VirtualizedContainerService.HintSize="450,304" sap2010:WorkflowViewState.IdRef="Sequence_25">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="us1:TimeZoneInfo" sap2010:Annotation.AnnotationText="Type 'msc:TimeZone' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="SPTimeZone" />
+                </Sequence.Variables>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <usa:GetSPTimeZone AttachmentsAction="{x:Null}" LocalPathHintText="{x:Null}" RelativeUrlHintText="{x:Null}" ChooseFile="False" DisplayName="Get TimeZone" sap:VirtualizedContainerService.HintSize="416,57" sap2010:WorkflowViewState.IdRef="GetSPTimeZone_8" SharePointTimeZone="[SPTimeZone]" ShowAttachFiles="False" ShowCAMLQuery="False" ShowCAMLWarning="False" ShowGroupDescription="False" ShowGroupName="False" ShowLibraryName="False" ShowListName="False" ShowLocalPath="False" ShowMove="False" ShowPermissionDropdown="False" ShowPropertiesDictionary="False" ShowRelativeUrl="False" ShowRename="False" ShowUserName="False" />
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,164" sap2010:WorkflowViewState.IdRef="LogMessage_15" Message="[&quot;Time zone is : &quot; + SPTimeZone.Description]" />
+              </Sequence>
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" SecurePassword="{x:Null}" UserName="{x:Null}" sap2010:Annotation.AnnotationText="WebLogin Activities&#xA;" AzureAppPermissions="None" DisplayName="Sharepoint application scope-WebLogin" sap:VirtualizedContainerService.HintSize="518,555" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_10" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SharePointInstanceType="WebLogin" URL="https://abumayar.sharepoint.com/sites/IT">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,338" sap2010:WorkflowViewState.IdRef="Sequence_27">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+                <Variable x:TypeArguments="us1:User" sap2010:Annotation.AnnotationText="Type 'msc:User' ('clr-namespace:Microsoft.SharePoint.Client;assembly=Microsoft.SharePoint.Client') could not be resolved and was automatically replaced with 'UnknownType'" Name="CurrentUser" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <usa:GetWebLoginUser DisplayName="Get web login user" sap:VirtualizedContainerService.HintSize="382,57" sap2010:WorkflowViewState.IdRef="GetWebLoginUser_3" SharePointUser="[CurrentUser]" URL="https://nebrastamayoz.sharepoint.com/sites/TestSite" />
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,173" sap2010:WorkflowViewState.IdRef="LogMessage_16" Message="[&quot;Logged in user: &quot; + CurrentUser.Email]" />
+              <usa:SignOut DisplayName="Sign out" sap:VirtualizedContainerService.HintSize="382,48" sap2010:WorkflowViewState.IdRef="SignOut_2" URL="https://nebrastamayoz.sharepoint.com/sites/TestSite" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+      <usa:SharepointApplicationScope AzureApplicationID="{x:Null}" ClientContext="{x:Null}" ClientId="{x:Null}" ClientSecret="{x:Null}" LoginTimeout="{x:Null}" Password="{x:Null}" SecurePassword="{x:Null}" UserName="{x:Null}" sap2010:Annotation.AnnotationText="Should Show Error QueryGrouping Not Supported&#xA;" AzureAppPermissions="None" DisplayName="Sharepoint application scope-QueryGrouping" sap:VirtualizedContainerService.HintSize="518,432" sap2010:WorkflowViewState.IdRef="SharepointApplicationScope_11" PlatformType="Online" QueryGrouping="False" ResetCredentials="False" SharePointInstanceType="WebLogin" URL="https://abumayar.sharepoint.com/sites/IT">
+        <usa:SharepointApplicationScope.Body>
+          <ActivityAction x:TypeArguments="us:SharePointContextInfo">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="us:SharePointContextInfo" Name="SharePointContextInfoTag" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="416,224" sap2010:WorkflowViewState.IdRef="Sequence_35">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="GroupName" />
+                <Variable x:TypeArguments="x:String" Name="UserName" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="382,164" sap2010:WorkflowViewState.IdRef="LogMessage_24" Message="[&quot;Just DesignError&quot;]" />
+            </Sequence>
+          </ActivityAction>
+        </usa:SharepointApplicationScope.Body>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </usa:SharepointApplicationScope>
+    </Sequence>
+  </Sequence>
+</Activity>
