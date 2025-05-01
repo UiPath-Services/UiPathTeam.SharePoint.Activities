@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+	<TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
 		<UseWindowsForms>true</UseWindowsForms>
 		<DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
 	</PropertyGroup>
