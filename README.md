@@ -1,17 +1,17 @@
 # UiPathTeam.SharePoint.Activities version 2.0
 Source Code for the UiPathTeam.SharePoint.Activities Custom activities listed in https://marketplace.uipath.com/listings/sharepoint-custom-activities-package
 
-# Migration from .NET Framework (Windows-Legacy) to .NET 8 (Windows) Package Version >= 2.0.0
+# Migration from .NET Framework (Windows-Legacy) to .NET 6 (Windows) Package Version >= 2.0.0
 
 ## Overview
-This guide is for users migrating from Package version `<= 1.7 (Windows-Legacy)` to version `>= 2.0 (Windows)`. Version 2.0 introduces a major update, transitioning the project from **.NET Framework** to **.NET 8**. The integration now leverages the **SharePoint REST API** instead of the legacy `Microsoft.SharePoint2016.CSOM` runtime.
+This guide is for users migrating from Package version `<= 1.7 (Windows-Legacy)` to version `>= 2.0 (Windows)`. Version 2.0 introduces a major update, transitioning the project from **.NET Framework** to **.NET 6**. The integration now leverages the **SharePoint REST API** instead of the legacy `Microsoft.SharePoint2016.CSOM` runtime.
 
 ---
 
 ## Key Updates
 
 - **Runtime Upgrade**:  
-  Migrated from .NET Framework to .NET 8 to enable Windows-Legacy RPA processes that depend on the old `UiPathTeam.SharePoint.Activity` to seamlessly transition to Windows projects.
+  Migrated from .NET Framework to .NET 6 to enable Windows-Legacy RPA processes that depend on the old `UiPathTeam.SharePoint.Activity` to seamlessly transition to Windows projects.
 
 - **API Transition**:  
   Replaced `Microsoft.SharePoint2016.CSOM` with the modern **SharePoint REST API**, aligning with current web standards.
