@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UiPathTeam.SharePoint;
+using UiPathTeam.SharePoint.RestAPI.Helpers;
 
 
 namespace UiPathTeam.SharePoint.Activities.Design
@@ -215,7 +216,8 @@ namespace UiPathTeam.SharePoint.Activities.Design
                     {
                         ExtractAzureAppScopes();
                         //var clientContext = await SharePointContextInfo.GetClientConsent(AzureAppIDField.Text, url.Text, AzureAppScopes);
-                        MessageBox.Show("Not implemented");
+                        var ttok = await TokenHelper.GetClientConsent(url.Text, AzureAppIDField.Text, AzureAppScopes);
+                        
                     }
                     catch (Exception ex)
                     {

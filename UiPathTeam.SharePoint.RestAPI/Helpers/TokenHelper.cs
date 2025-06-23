@@ -1,20 +1,21 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Identity.Client;
-using Microsoft.VisualBasic;
 using UiPathTeam.SharePoint.Service;
-using System.Globalization;
-using System.Net.Security;
-using static UiPathTeam.SharePoint.RestAPI.Helpers.TokenHelper.AcsMetadataParser;
-using System.Text.Json;
 using UiPathTeam.SharePoint.Service.Helpers;
-using Newtonsoft.Json.Linq;
+using static System.Formats.Asn1.AsnWriter;
+using static UiPathTeam.SharePoint.RestAPI.Helpers.TokenHelper.AcsMetadataParser;
 
 namespace UiPathTeam.SharePoint.RestAPI.Helpers
 {
@@ -449,11 +450,10 @@ namespace UiPathTeam.SharePoint.RestAPI.Helpers
 
             string spoTenant = ExtractTenantFromSiteURL(Url);
 
-            var publicClientApp = PublicClientApplicationBuilder.Create(AzureAppId)
-                .WithDefaultRedirectUri()
+            IPublicClientApplication publicClientApp = PublicClientApplicationBuilder.Create(AzureAppId)
+                .WithRedirectUri("http://localhost")
                 .WithAuthority(AadAuthorityAudience.AzureAdMultipleOrgs)
                 .Build();
-
            
 
             try
@@ -465,9 +465,44 @@ namespace UiPathTeam.SharePoint.RestAPI.Helpers
                 
                 return authResult.AccessToken;
             }
+            catch (MsalUiRequiredException ex)
+            {
+                if(ex.Message.ToLower().Contains("consent"))
+                {
+                    return await GetClientConsent(Url, AzureAppId, AzureAppPermissions);
+                }
+
+                throw ex;
+            }
             catch (MsalException ex)
             {
-                throw new Exception("Error acquiring token via AzureApp mode (On-Behalf-Of flow).", ex);
+                throw new Exception("Error acquiring token via AzureApp mode. Exception: " + ex.Message, ex);
+            }
+        }
+
+        public static async Task<string> GetClientConsent(
+            string Url, string AzureAppId, string[] AzureAppPermissions)
+        {
+
+            //string spoTenant = ExtractTenantFromSiteURL(Url);
+
+            var publicClientApp = PublicClientApplicationBuilder.Create(AzureAppId)
+                .WithRedirectUri("http://localhost")
+                .WithAuthority(AadAuthorityAudience.AzureAdMultipleOrgs)
+                .Build();
+
+            try
+            {
+
+                var authResult = await publicClientApp
+                           .AcquireTokenInteractive(AzureAppPermissions)
+                           .ExecuteAsync();
+
+                return authResult.AccessToken;
+            }
+            catch (MsalException ex)
+            {
+                throw new Exception("Error acquiring token via Azure APp - AcquireTokenInteractive.", ex);
             }
         }
 
