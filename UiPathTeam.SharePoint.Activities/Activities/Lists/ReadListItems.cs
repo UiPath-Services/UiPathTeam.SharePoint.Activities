@@ -81,7 +81,7 @@ namespace UiPathTeam.SharePoint.Activities.Lists
             ReadListItemsResult itemListResult = ((Task<ReadListItemsResult>)result).GetAwaiter().GetResult();
             
             if (ItemsDictArray.Expression != null)
-                ItemsDictArray.Set(context, itemListResult.ItemsDictArray);
+                ItemsDictArray.Set(context, itemListResult.ItemsDictArray.ToArray());
             else
                 ItemsTable.Set(context, itemListResult.ItemsTable);
 
