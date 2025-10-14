@@ -55,8 +55,9 @@ namespace UiPathTeam.SharePoint.Activities.Libraries
             var httpClient = spContext.GetSharePointContext();
 
             var service = new SharePointLibraryService(httpClient, spContext.Url);
-            
-            relativeUrl = ActivitiesUtils.ResolveRelativePath(spContext.Url, relativeUrl);
+
+
+            //relativeUrl = ActivitiesUtils.ResolveRelativePath(spContext.Url, relativeUrl);
             Utils.ValidateLibraryResourcePath(relativeUrl, AllowOperationsOnASPXFiles);
 
             var task = service.DeleteAsync(libraryName, relativeUrl, AllowOperationsOnASPXFiles);

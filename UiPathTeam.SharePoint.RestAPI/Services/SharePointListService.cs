@@ -1,10 +1,12 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Diagnostics;
 using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Text;
-using UiPathTeam.SharePoint.Service.Helpers;
 using System.Net.Mail;
-using System;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using UiPathTeam.SharePoint.Service.Helpers;
 
 namespace UiPathTeam.SharePoint.RestAPI.Services
 {
@@ -243,78 +245,871 @@ namespace UiPathTeam.SharePoint.RestAPI.Services
             return attachments;
         }
 
-        /// <summary>
-        /// 6) ReadListItems  
-        /// Inputs: ListName, CAMLQuery (as XML string)  
-        /// Outputs: ItemsDictArray (list of dictionaries) and ItemsTable (DataTable)
-        /// </summary>
+        //public async Task<ReadListItemsResult> ReadListItemsRender2Async(string listName, string camlQuery)
+        //{
+        //    bool callerHasViewFields = !string.IsNullOrWhiteSpace(camlQuery) &&
+        //                       camlQuery.IndexOf("<ViewFields", StringComparison.OrdinalIgnoreCase) >= 0;
+
+        //    string viewFieldsXml = string.Empty;
+        //    List<string> ensuredFields = new List<string>();
+        //    if (!callerHasViewFields)
+        //    {
+        //        var viewFields = await GetSchemaFieldsAsync(listName, camlQuery);
+        //        ensuredFields = EnsureCoreFields(viewFields);
+
+        //        var fieldRefs = string.Join("",
+        //            ensuredFields.Select(f => $"<FieldRef Name='{System.Security.SecurityElement.Escape(f)}' />"));
+        //        viewFieldsXml = $"<ViewFields>{fieldRefs}</ViewFields>";
+        //    }
+        //    else
+        //    {
+        //        // Regex to capture Name="..."
+        //        var matches = System.Text.RegularExpressions.Regex.Matches(
+        //            camlQuery,
+        //            "Name\\s*=\\s*\"([^\"]+)\"",
+        //            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        //        var viewFields = new List<string>();
+        //        foreach (System.Text.RegularExpressions.Match m in matches)
+        //        {
+        //            if (m.Groups.Count > 1)
+        //                viewFields.Add(m.Groups[1].Value);
+        //        }
+        //        ensuredFields = EnsureCoreFields(viewFields);
+        //    }
+        //    string queryXml = string.IsNullOrWhiteSpace(camlQuery) ? "<Query/>" : camlQuery;
+
+        //    string viewXml = $@"
+        //                    <View Scope='RecursiveAll'>
+        //                      {queryXml}
+        //                      {viewFieldsXml}
+        //                    </View>".Trim();
+        //    //// 1) Ensure we have a minimal <View/> if none supplied
+        //    //string viewXml = string.IsNullOrWhiteSpace(camlQuery)
+        //    //? "<View Scope='RecursiveAll'><Query/></View>"
+        //    //: $"<View Scope='RecursiveAll'>{camlQuery}</View>";
+
+        //    // 2) Build the payload *without* __metadata
+        //    var payload = new
+        //    {
+        //        parameters = new
+        //        {
+        //            ViewXml = viewXml,
+        //            RenderOptions = 4    // 2 = IncludeListData (raw + lookupValue)
+        //        }
+        //    };
+        //    string body = JsonSerializer.Serialize(payload);
+
+        //    // 3) Prepare the RenderListDataAsStream request
+        //    var url = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/RenderListDataAsStream";
+        //    using var req = new HttpRequestMessage(HttpMethod.Post, url);
+
+        //    // Accept: application/json;odata=nometadata
+        //    req.Headers.Accept.Clear();
+        //    req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        //    // X-RequestDigest header
+        //    req.Headers.Add("X-RequestDigest", await GetFormDigestAsync());
+
+        //    // Content-Type: application/json;odata=nometadata
+        //    var content = new StringContent(body, Encoding.UTF8);
+        //    content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata=nometadata");
+        //    req.Content = content;
+
+        //    // 4) Send and ensure success
+        //    var resp = await _httpClient.SendAsync(req);
+        //    await resp.EnsureSuccessOrThrowAsync();
+        //    var json = await resp.Content.ReadAsStringAsync();
+
+        //    // 5) Parse the nometadata response
+        //    using var doc = JsonDocument.Parse(json);
+        //    // Top‐level has "RenderListData" with a "Row" array
+        //    //var rows = doc.RootElement
+        //    //              .GetProperty("RenderListData")
+        //    //              .GetProperty("Row")
+        //    //              .EnumerateArray();
+        //    var rows = GetRows(doc.RootElement);   // <- robust to both shapes
+
+        //    // 6) Build DataTable and dictionary list
+        //    var dt = new DataTable();
+        //    var items = new List<Dictionary<string, object>>();
+
+
+        //    // helper to detect user objects
+        //    bool IsUserObject(JsonElement e)
+        //    {
+        //        return e.ValueKind == JsonValueKind.Object &&
+        //               (e.TryGetProperty("id", out _) || e.TryGetProperty("title", out _) || e.TryGetProperty("email", out _));
+        //    }
+        //    bool IsUserArray(JsonElement v)
+        //    {
+        //        if (v.ValueKind != JsonValueKind.Array) return false;
+        //        using var en = v.EnumerateArray();
+        //        if (!en.MoveNext()) return false;
+        //        return IsUserObject(en.Current);
+        //    }
+
+        //    foreach (var row in rows)
+        //    {
+        //        // Collect raw values and lookupValues
+        //        var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        //        //var lookupMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        //        foreach (var prop in row.EnumerateObject())
+        //        {
+        //            string name = prop.Name;
+        //            var val = prop.Value;
+
+        //            // Ignore noisy display-only helpers
+        //            if (name.EndsWith(".span", StringComparison.OrdinalIgnoreCase))
+        //                continue;
+
+        //            if (name.EndsWith(".lookupValue", StringComparison.OrdinalIgnoreCase))
+        //            {
+        //                //// e.g. "Author.lookupValue" → field "Author"
+        //                //var field = name[..name.IndexOf('.')];
+        //                //lookupMap[field] = val.GetString();
+        //                continue;
+        //            }
+        //            if (name.EndsWith(".term", StringComparison.OrdinalIgnoreCase))
+        //            {
+        //                // Managed metadata GUID or value
+        //                dict[name] = val.ValueKind == JsonValueKind.String ? val.GetString() : val.ToString();
+        //                continue;
+        //            }
+        //            if (name.Contains('.') && row.TryGetProperty(name.Split('.')[0], out var baseVal) && baseVal.ValueKind == JsonValueKind.Array)
+        //            {
+        //                // Skip redundant e15p.id / e15p.title if "e15p" array is already there
+        //                continue;
+        //            }
+        //            // --- User field handling ---
+        //            if (IsUserArray(val))
+        //            {
+        //                var users = val.EnumerateArray().Select(u => new ListSPUser
+        //                {
+        //                    Id = u.TryGetProperty("id", out var pId) ? pId.ToString() : null,
+        //                    Title = u.TryGetProperty("title", out var pTitle) ? pTitle.GetString() : null,
+        //                    Email = u.TryGetProperty("email", out var pEmail) ? pEmail.GetString() : null,
+        //                    Sip = u.TryGetProperty("sip", out var pSip) ? pSip.GetString() : null,
+        //                    Picture = u.TryGetProperty("picture", out var pPic) ? pPic.GetString() : null
+        //                }).ToList();
+
+        //                // single vs multi-value
+        //                if (users.Count == 1)
+        //                    dict[name] = users.First();
+        //                else
+        //                    dict[name] = users;
+
+        //                continue;
+        //            }
+        //            // arrays (non-user) → raw JSON string
+        //            if (val.ValueKind == JsonValueKind.Array)
+        //            {
+        //                dict[name] = val.ToString();
+        //                continue;
+        //            }
+        //            if (ensuredFields.Contains(name))
+        //            {
+        //                // primitives
+        //                dict[name] = val.ValueKind switch
+        //                {
+        //                    JsonValueKind.String => val.GetString(),
+        //                    JsonValueKind.Number => val.TryGetInt64(out var i) ? i : (object)val.GetDecimal(),
+        //                    JsonValueKind.True => true,
+        //                    JsonValueKind.False => false,
+        //                    JsonValueKind.Null => null,
+        //                    _ => val.ToString()
+        //                };
+        //            }
+
+
+
+
+
+        //        }
+
+        //        //// 7) Overlay each lookupValue onto the raw field
+        //        //foreach (var kv in lookupMap)
+        //        //{
+        //        //    dict[kv.Key] = kv.Value;
+        //        //}
+
+        //        // 8) Add to DataTable
+        //        foreach (var col in dict.Keys)
+        //        {
+        //            if (!dt.Columns.Contains(col))
+        //                dt.Columns.Add(col);
+        //        }
+
+        //        var dr = dt.NewRow();
+        //        foreach (var kv in dict)
+        //            dr[kv.Key] = kv.Value ?? DBNull.Value;
+        //        dt.Rows.Add(dr);
+
+        //        items.Add(dict);
+        //    }
+
+        //    // 9) Return the result
+        //    return new ReadListItemsResult
+        //    {
+        //        ItemsTable = dt,
+        //        ItemsDictArray = items
+        //    };
+        //}
+
         public async Task<ReadListItemsResult> ReadListItemsAsync(string listName, string camlQuery)
         {
+            bool callerHasViewFields = !string.IsNullOrWhiteSpace(camlQuery) &&
+                               camlQuery.IndexOf("<ViewFields", StringComparison.OrdinalIgnoreCase) >= 0;
+            
+            string viewFieldsXml = string.Empty;
+            List<string> ensuredFields = new List<string>();
+            if (!callerHasViewFields)
+            {
+                var viewFields = await GetDefaultViewFieldsAsync(listName);
+                ensuredFields = EnsureCoreFields(viewFields);
+
+                var fieldRefs = string.Join("",
+                    ensuredFields.Select(f => $"<FieldRef Name='{System.Security.SecurityElement.Escape(f)}' />"));
+                viewFieldsXml = $"<ViewFields>{fieldRefs}</ViewFields>";
+            }else{
+                // Regex to capture Name="..."
+                //var matches = System.Text.RegularExpressions.Regex.Matches(
+                //    camlQuery,
+                //    "Name\\s*=\\s*\"([^\"]+)\"",
+                //    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                var matches = Regex.Matches(
+                    camlQuery,
+                    @"Name\s*=\s*['""]([^'""]+)['""]",
+                    RegexOptions.IgnoreCase);
+                var viewFields = new List<string>();
+                foreach (System.Text.RegularExpressions.Match m in matches)
+                {
+                    if (m.Groups.Count > 1)
+                        viewFields.Add(m.Groups[1].Value);
+                }
+                ensuredFields = EnsureCoreFields(viewFields);
+            }
+            string queryXml = string.Empty;
+            if (string.IsNullOrWhiteSpace(camlQuery))
+            {
+                queryXml = "<Query/>";
+            }
+            else
+            {
+                var match = Regex.Match(camlQuery,
+                                        @"<View[^>]*>(?<inner>[\s\S]*?)<\/View>",
+                                        RegexOptions.IgnoreCase);
+
+                queryXml = match.Success ? match.Groups["inner"].Value : camlQuery;
+            }
+                //string queryXml = string.IsNullOrWhiteSpace(camlQuery) ? "<Query/>" : camlQuery;
+
+            string viewXml = $@"
+                            <View Scope='RecursiveAll'>
+                              {queryXml}
+                              {viewFieldsXml}
+                            </View>".Trim();
+            //// 1) Ensure we have a minimal <View/> if none supplied
+            //string viewXml = string.IsNullOrWhiteSpace(camlQuery)
+            //? "<View Scope='RecursiveAll'><Query/></View>"
+            //: $"<View Scope='RecursiveAll'>{camlQuery}</View>";
+
+            // 2) Build the payload *without* __metadata
             var payload = new
             {
-                query = new
+                parameters = new
                 {
-                    __metadata = new { type = "SP.CamlQuery" },
-                    ViewXml = camlQuery
+                    ViewXml = viewXml,
+                    RenderOptions = 2    // 2 = IncludeListData (raw + lookupValue)
                 }
             };
-            string jsonPayload = JsonSerializer.Serialize(payload);
+            string body = JsonSerializer.Serialize(payload);
 
-            var requestUrl = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/getitems";
-            using var request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
-            SetJsonHeaders(request);
+            // 3) Prepare the RenderListDataAsStream request
+            var url = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/RenderListDataAsStream";
+            using var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-            // Updated content creation:
-            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-            content.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("odata", "verbose"));
-            request.Content = content;
+            // Accept: application/json;odata=nometadata
+            req.Headers.Accept.Clear();
+            req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
 
-            string formDigest = await GetFormDigestAsync();
-            request.Headers.Add("X-RequestDigest", formDigest);
+            // X-RequestDigest header
+            req.Headers.Add("X-RequestDigest", await GetFormDigestAsync());
 
-            var response = await _httpClient.SendAsync(request);
-            await response.EnsureSuccessOrThrowAsync();
-            string responseJson = await response.Content.ReadAsStringAsync();
+            // Content-Type: application/json;odata=nometadata
+            var content = new StringContent(body, Encoding.UTF8);
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata=nometadata");
+            req.Content = content;
 
-            var result = new ReadListItemsResult();
-            var itemsDict = new List<Dictionary<string, object>>();
+            // 4) Send and ensure success
+            var resp = await _httpClient.SendAsync(req);
+            await resp.EnsureSuccessOrThrowAsync();
+            var json = await resp.Content.ReadAsStringAsync();
+
+            // 5) Parse the nometadata response
+            using var doc = JsonDocument.Parse(json);
+            // Top‐level has "RenderListData" with a "Row" array
+            //var rows = doc.RootElement
+            //              .GetProperty("RenderListData")
+            //              .GetProperty("Row")
+            //              .EnumerateArray();
+            var rows = GetRows(doc.RootElement);   // <- robust to both shapes
+
+            // 6) Build DataTable and dictionary list
             var dt = new DataTable();
+            var items = new List<Dictionary<string, object>>();
 
-            using (JsonDocument doc = JsonDocument.Parse(responseJson))
+
+            // helper to detect user objects
+            bool IsUserObject(JsonElement e)
             {
-                if (doc.RootElement.TryGetProperty("d", out JsonElement dElement) &&
-                    dElement.TryGetProperty("results", out JsonElement results))
-                {
-                    foreach (var item in results.EnumerateArray())
-                    {
-                        var dict = new Dictionary<string, object>();
-                        foreach (var prop in item.EnumerateObject())
-                        {
-                            object value = prop.Value.ValueKind switch
-                            {
-                                JsonValueKind.String => prop.Value.GetString(),
-                                JsonValueKind.Number => prop.Value.GetDecimal(),
-                                _ => prop.Value.ToString()
-                            };
-                            dict[prop.Name] = value;
-
-                            if (!dt.Columns.Contains(prop.Name))
-                                dt.Columns.Add(prop.Name);
-                        }
-                        DataRow row = dt.NewRow();
-                        foreach (var kvp in dict)
-                        {
-                            row[kvp.Key] = kvp.Value;
-                        }
-                        dt.Rows.Add(row);
-                        itemsDict.Add(dict);
-                    }
-                }
+                return e.ValueKind == JsonValueKind.Object &&
+                       (e.TryGetProperty("id", out _) || e.TryGetProperty("title", out _) || e.TryGetProperty("email", out _));
             }
-            result.ItemsDictArray = itemsDict;
-            result.ItemsTable = dt;
-            return result;
+            bool IsUserArray(JsonElement v)
+            {
+                if (v.ValueKind != JsonValueKind.Array) return false;
+                using var en = v.EnumerateArray();
+                if (!en.MoveNext()) return false;
+                return IsUserObject(en.Current);
+            }
+
+            foreach (var row in rows)
+            {
+                // Collect raw values and lookupValues
+                var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                //var lookupMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var prop in row.EnumerateObject())
+                {
+                    string name = prop.Name;
+                    var val = prop.Value;
+                    
+                    // Ignore noisy display-only helpers
+                    if (name.EndsWith(".span", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    if (name.EndsWith(".lookupValue", StringComparison.OrdinalIgnoreCase))
+                    {
+                        //// e.g. "Author.lookupValue" → field "Author"
+                        //var field = name[..name.IndexOf('.')];
+                        //lookupMap[field] = val.GetString();
+                        continue;
+                    }
+                    if (name.EndsWith(".term", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Managed metadata GUID or value
+                        dict[name] = val.ValueKind == JsonValueKind.String ? val.GetString() : val.ToString();
+                        continue;
+                    }
+                    if (name.Contains('.') && row.TryGetProperty(name.Split('.')[0], out var baseVal) && baseVal.ValueKind == JsonValueKind.Array)
+                    {
+                        // Skip redundant e15p.id / e15p.title if "e15p" array is already there
+                        continue;
+                    }
+                    // --- User field handling ---
+                    if (IsUserArray(val))
+                    {
+                        var users = val.EnumerateArray().Select(u => new ListSPUser
+                        {
+                            Id = u.TryGetProperty("id", out var pId) ? pId.ToString() : null,
+                            Title = u.TryGetProperty("title", out var pTitle) ? pTitle.GetString() : null,
+                            Email = u.TryGetProperty("email", out var pEmail) ? pEmail.GetString() : null,
+                            Sip = u.TryGetProperty("sip", out var pSip) ? pSip.GetString() : null,
+                            Picture = u.TryGetProperty("picture", out var pPic) ? pPic.GetString() : null
+                        }).ToList();
+
+                        // single vs multi-value
+                        if (users.Count == 1)
+                            dict[name] = users.First();
+                        else
+                            dict[name] = users;
+
+                        continue;
+                    }
+                    // arrays (non-user) → raw JSON string
+                    if (val.ValueKind == JsonValueKind.Array)
+                    {
+                        dict[name] = val.ToString();
+                        continue;
+                    }
+                    if (ensuredFields.Contains(name))
+                    {
+                        // primitives
+                        dict[name] = val.ValueKind switch
+                        {
+                            JsonValueKind.String => val.GetString(),
+                            JsonValueKind.Number => val.TryGetInt64(out var i) ? i : (object)val.GetDecimal(),
+                            JsonValueKind.True => true,
+                            JsonValueKind.False => false,
+                            JsonValueKind.Null => null,
+                            _ => val.ToString()
+                        };
+                    }
+                    
+
+
+
+
+                }
+
+                //// 7) Overlay each lookupValue onto the raw field
+                //foreach (var kv in lookupMap)
+                //{
+                //    dict[kv.Key] = kv.Value;
+                //}
+
+                // 8) Add to DataTable
+                foreach (var col in dict.Keys)
+                {
+                    if (!dt.Columns.Contains(col))
+                        dt.Columns.Add(col);
+                }
+
+                var dr = dt.NewRow();
+                foreach (var kv in dict)
+                    dr[kv.Key] = kv.Value ?? DBNull.Value;
+                dt.Rows.Add(dr);
+
+                items.Add(dict);
+
+            }
+
+            // 9) Return the result
+            return new ReadListItemsResult
+            {
+                ItemsTable = dt,
+                ItemsDictArray = items
+            };
         }
+        // Helper: get /DefaultView/ViewFields for the list
+        //private async Task<IEnumerable<string>> GetSchemaFieldsAsync(string listName, string camlQuery)
+        //{
+        //    string viewXml = string.IsNullOrWhiteSpace(camlQuery)
+        //    ? "<View Scope='RecursiveAll'><Query/></View>"
+        //    : $"<View Scope='RecursiveAll'>{camlQuery}</View>";
+
+        //    var payload = new
+        //    {
+        //        parameters = new
+        //        {
+        //            ViewXml = "<View/>",
+        //            RenderOptions = 4    // 2 = IncludeListData (raw + lookupValue)
+        //        }
+        //    };
+        //    string body = JsonSerializer.Serialize(payload);
+
+
+        //    var url = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/RenderListDataAsStream";
+        //    using var req = new HttpRequestMessage(HttpMethod.Post, url);
+
+        //    // Accept: application/json;odata=nometadata
+        //    req.Headers.Accept.Clear();
+        //    req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        //    // X-RequestDigest header
+        //    req.Headers.Add("X-RequestDigest", await GetFormDigestAsync());
+
+        //    // Content-Type: application/json;odata=nometadata
+        //    var content = new StringContent(body, Encoding.UTF8);
+        //    content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata=nometadata");
+        //    req.Content = content;
+
+        //    // 4) Send and ensure success
+        //    var resp = await _httpClient.SendAsync(req);
+        //    await resp.EnsureSuccessOrThrowAsync();
+        //    var json = await resp.Content.ReadAsStringAsync();
+
+        //    // 5) Parse the nometadata response
+        //    using var doc = JsonDocument.Parse(json);
+        //    var root = doc.RootElement;
+
+        //    var fieldNames = new List<string>();
+
+        //    if (root.TryGetProperty("Field", out var fieldsElem) &&
+        //        fieldsElem.ValueKind == JsonValueKind.Array)
+        //    {
+        //        foreach (var field in fieldsElem.EnumerateArray())
+        //        {
+        //            if (field.TryGetProperty("RealFieldName", out var nameProp))
+        //            {
+        //                var name = nameProp.GetString();
+        //                if (!string.IsNullOrWhiteSpace(name))
+        //                    fieldNames.Add(name);
+        //            }
+        //        }
+        //    }
+
+        //    return fieldNames;
+        //}
+        // Helper: get /DefaultView/ViewFields for the list
+        private async Task<IEnumerable<string>> GetDefaultViewFieldsAsync(string listName)
+        {
+            var url = $"{_siteUrl}/_api/web/lists/getbytitle('{listName}')/DefaultView/ViewFields";
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+            using var res = await _httpClient.SendAsync(req).ConfigureAwait(false);
+            res.EnsureSuccessStatusCode();
+
+            var json = await res.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return ParseDefaultViewFieldsFromResponse(json);
+        }
+        private static List<string> ParseDefaultViewFieldsFromResponse(string json)
+        {
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            // Unwrap "d" if present (odata=verbose)
+            if (root.TryGetProperty("d", out var d)) root = d;
+
+            if (root.TryGetProperty("Items", out var items2) && items2.ValueKind == JsonValueKind.Array)
+            {
+                return items2.EnumerateArray()
+                              .Select(x => x.GetString())
+                              .Where(s => !string.IsNullOrWhiteSpace(s))
+                              .Distinct(StringComparer.OrdinalIgnoreCase)
+                              .ToList();
+            }
+            // 1) Preferred: Items.results
+            if (root.TryGetProperty("Items", out var items) &&
+                items.TryGetProperty("results", out var results))
+            {
+                return results.EnumerateArray()
+                              .Select(x => x.GetString())
+                              .Where(s => !string.IsNullOrWhiteSpace(s))
+                              .Distinct(StringComparer.OrdinalIgnoreCase)
+                              .ToList();
+            }
+            
+
+            // 2) Fallback: parse SchemaXml: <FieldRef Name="..." />
+            if (root.TryGetProperty("SchemaXml", out var schemaXmlElem))
+            {
+                var schema = schemaXmlElem.GetString() ?? string.Empty;
+                var names = new List<string>();
+                foreach (System.Text.RegularExpressions.Match m in
+                         System.Text.RegularExpressions.Regex.Matches(schema, "Name=\\\"([^\\\"]+)\\\""))
+                {
+                    names.Add(m.Groups[1].Value);
+                }
+                return names.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            }
+
+            // 3) Last resort: if response is directly an array
+            if (root.ValueKind == JsonValueKind.Array)
+            {
+                return root.EnumerateArray()
+                           .Select(x => x.GetString())
+                           .Where(s => !string.IsNullOrWhiteSpace(s))
+                           .Distinct(StringComparer.OrdinalIgnoreCase)
+                           .ToList();
+            }
+
+            return new List<string>(); // nothing found
+        }
+        // Helper: add system/core fields
+        private static List<string> EnsureCoreFields(IEnumerable<string> fields)
+        {
+            var set = new HashSet<string>(fields ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+            string[] core = { "ID", "ContentTypeId", "Modified", "Created", "Author", "Editor", "FileRef", "FSObjType" };
+            foreach (var f in core) set.Add(f);
+            return set.ToList();
+        }
+        private static IEnumerable<JsonElement> GetRows(JsonElement root)
+        {
+            // Shape A (your case):
+            // { "Row": [ ... ], "FirstRow": 1, "LastRow": 2, ... }
+            if (root.TryGetProperty("Row", out var rowA) && rowA.ValueKind == JsonValueKind.Array)
+                return rowA.EnumerateArray();
+
+            // Shape B:
+            // { "RenderListData": { "Row": [ ... ], ... } }
+            if (root.TryGetProperty("RenderListData", out var rld) &&
+                rld.ValueKind == JsonValueKind.Object &&
+                rld.TryGetProperty("Row", out var rowB) &&
+                rowB.ValueKind == JsonValueKind.Array)
+                return rowB.EnumerateArray();
+
+            // Shape C (rare): { "d": { "RenderListData": { "Row": [ ... ] } } }
+            if (root.TryGetProperty("d", out var d) &&
+                d.ValueKind == JsonValueKind.Object &&
+                d.TryGetProperty("RenderListData", out var rld2) &&
+                rld2.ValueKind == JsonValueKind.Object &&
+                rld2.TryGetProperty("Row", out var rowC) &&
+                rowC.ValueKind == JsonValueKind.Array)
+                return rowC.EnumerateArray();
+
+            // Nothing matched
+            return Array.Empty<JsonElement>();
+        }
+        
+
+        //public async Task<ReadListItemsResult> ReadListItemsAsync(string listName, string camlQuery)
+        //{
+        //    // 1) If no CAML supplied, use a bare <View/> so SP falls back to default view
+        //    if (string.IsNullOrWhiteSpace(camlQuery))
+        //    {
+        //        camlQuery = "<View/>";
+        //    }
+
+        //    // 2) Build CAML POST payload
+        //    var payload = new
+        //    {
+        //        query = new
+        //        {
+        //            __metadata = new { type = "SP.CamlQuery" },
+        //            ViewXml = camlQuery
+        //        }
+        //    };
+        //    var body = JsonSerializer.Serialize(payload);
+
+        //    // 3) Compose the REST URL: expand only FieldValuesAsText
+        //    var url = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/GetItems" +
+        //              "?$expand=FieldValuesAsText" +
+        //              "&$select=*,FieldValuesAsText";
+
+        //    using var req = new HttpRequestMessage(HttpMethod.Post, url);
+        //    SetJsonHeaders(req);
+        //    req.Headers.Add("X-RequestDigest", await GetFormDigestAsync());
+        //    req.Content = new StringContent(body, Encoding.UTF8, "application/json");
+        //    req.Content.Headers.ContentType.Parameters.Add(
+        //        new NameValueHeaderValue("odata", "verbose")
+        //    );
+
+        //    // 4) Send & ensure success
+        //    var resp = await _httpClient.SendAsync(req);
+        //    await resp.EnsureSuccessOrThrowAsync();
+        //    var json = await resp.Content.ReadAsStringAsync();
+
+        //    // 5) Parse out items, pulling each person-field name from FieldValuesAsText
+        //    using var doc = JsonDocument.Parse(json);
+        //    var results = doc.RootElement
+        //                     .GetProperty("d")
+        //                     .GetProperty("results")
+        //                     .EnumerateArray();
+
+        //    var dt = new DataTable();
+        //    var items = new List<Dictionary<string, object>>();
+
+        //    foreach (var item in results)
+        //    {
+        //        // grab the flattened text values
+        //        var fv = item.GetProperty("FieldValuesAsText");
+
+        //        var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        //        foreach (var prop in item.EnumerateObject())
+        //        {
+        //            if (prop.Name == "FieldValuesAsText")
+        //                continue;   // skip the nested object itself
+
+        //            object val;
+        //            if (fv.TryGetProperty(prop.Name, out var textVal))
+        //            {
+        //                // if FieldValuesAsText has this name, use it (for person, choice, etc.)
+        //                switch (textVal.ValueKind)
+        //                {
+        //                    case JsonValueKind.String:
+        //                        val = textVal.GetString();
+        //                        break;
+        //                    case JsonValueKind.Null:
+        //                        val = null;
+        //                        break;
+        //                    default:
+        //                        // could be object or array; fall back to raw JSON
+        //                        val = textVal.ToString();
+        //                        break;
+        //                }
+        //            }
+        //            else if (prop.Value.ValueKind == JsonValueKind.String)
+        //            {
+        //                val = prop.Value.GetString();
+        //            }
+        //            else if (prop.Value.ValueKind == JsonValueKind.Number)
+        //            {
+        //                val = prop.Value.GetDecimal();
+        //            }
+        //            else
+        //            {
+        //                val = prop.Value.ToString();
+        //            }
+
+        //            dict[prop.Name] = val;
+        //            if (!dt.Columns.Contains(prop.Name))
+        //                dt.Columns.Add(prop.Name);
+        //        }
+
+        //        var row = dt.NewRow();
+        //        foreach (var kv in dict)
+        //            row[kv.Key] = kv.Value ?? DBNull.Value;
+        //        dt.Rows.Add(row);
+
+        //        items.Add(dict);
+        //    }
+
+        //    return new ReadListItemsResult
+        //    {
+        //        ItemsTable = dt,
+        //        ItemsDictArray = items
+        //    };
+        //}
+
+        //public async Task<ReadListItemsResult> ReadListItems2Async(string listName, string camlQuery)
+        //{
+
+        //    string viewXml = string.IsNullOrWhiteSpace(camlQuery)
+        //    ? "<View Scope='RecursiveAll'><Query/></View>"
+        //    : $"<View Scope='RecursiveAll'>{camlQuery}</View>";
+
+
+            
+        //    //string[] personFields = new[] { "Author", "Editor", "e15p" };
+        //    string[] personFields = new[] { "e15p" };
+        //    var expand = string.Join(",", personFields);
+        //    var selectParts = new List<string> { "Id", "Title", "FileSystemObjectType", "ContentTypeId", "Created", "Modified", "Attachments", "GUID" };
+        //    foreach (var f in personFields)
+        //        selectParts.AddRange(new[] { $"{f}/Id", $"{f}/Title", $"{f}/EMail" });
+        //    // If you also need the raw numeric IDs (AuthorId etc.), include them too:
+        //    selectParts.AddRange(personFields.Select(f => f + "Id"));
+
+        //    var select = string.Join(",", selectParts);
+        //    var url = $"{_siteUrl}/_api/web/lists/getbytitle('{Uri.EscapeDataString(listName)}')/GetItems" +
+        //              $"?$select={Uri.EscapeDataString(select)}&$expand={Uri.EscapeDataString(expand)}";
+
+
+        //    var payload = new { query = new { ViewXml = viewXml } };
+        //    var json = JsonSerializer.Serialize(payload);
+
+        //    using var req = new HttpRequestMessage(HttpMethod.Post, url);
+        //    var acceptHeader = new MediaTypeWithQualityHeaderValue("application/json");
+        //    acceptHeader.Parameters.Add(new NameValueHeaderValue("odata", "nometadata"));
+        //    req.Headers.Accept.Add(acceptHeader);
+        //    req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+        //    req.Content.Headers.ContentType.Parameters.Add(
+        //        new NameValueHeaderValue("odata", "nometadata")
+        //    );
+        //    req.Headers.Add("X-RequestDigest", await GetFormDigestAsync());
+
+           
+        //    //req.Content.Headers.ContentType.Parameters.Add(
+        //    //    new NameValueHeaderValue("odata", "verbose")
+        //    //);
+
+        //    // 4) Send & ensure success
+        //    var res = await _httpClient.SendAsync(req);
+        //    await res.EnsureSuccessOrThrowAsync();
+        //    var txt = await res.Content.ReadAsStringAsync();
+
+        //    // 5) Parse out items, pulling each person-field name from FieldValuesAsText
+        //    using var doc = JsonDocument.Parse(txt);
+
+        //    var items = doc.RootElement.GetProperty("value");
+        //    var list = new List<Dictionary<string, object>>(items.GetArrayLength());
+
+        //    foreach (var item in items.EnumerateArray())
+        //    {
+        //        var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        //        foreach (var p in item.EnumerateObject())
+        //        {
+        //            if (p.Name.StartsWith("@")) continue; // ignore metadata if any
+        //            dict[p.Name] = p.Value.ValueKind switch
+        //            {
+        //                JsonValueKind.String => p.Value.GetString(),
+        //                JsonValueKind.Number => p.Value.TryGetInt64(out var l) ? l : p.Value.GetDouble(),
+        //                JsonValueKind.True => true,
+        //                JsonValueKind.False => false,
+        //                JsonValueKind.Null => null,
+        //                _ => p.Value.ToString()
+        //            };
+        //        }
+        //        list.Add(dict);
+        //    }
+
+        //    // match your original return type: object[]
+        //    //return list.Cast<object>().ToArray();
+
+        //    return new ReadListItemsResult
+        //    {
+        //        ItemsTable = null,
+        //        ItemsDictArray = list
+        //    };
+        //}
+
+
+
+
+        ///// <summary>
+        ///// 6) ReadListItems  
+        ///// Inputs: ListName, CAMLQuery (as XML string)  
+        ///// Outputs: ItemsDictArray (list of dictionaries) and ItemsTable (DataTable)
+        ///// </summary>
+        //public async Task<ReadListItemsResult> ReadListItemsBackupAsync(string listName, string camlQuery)
+        //{
+        //    var payload = new
+        //    {
+        //        query = new
+        //        {
+        //            __metadata = new { type = "SP.CamlQuery" },
+        //            ViewXml = camlQuery
+        //        }
+        //    };
+        //    string jsonPayload = JsonSerializer.Serialize(payload);
+
+        //    var requestUrl = $"{_siteUrl}/_api/web/lists/getByTitle('{listName}')/getitems";
+        //    using var request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
+        //    SetJsonHeaders(request);
+
+        //    // Updated content creation:
+        //    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        //    content.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("odata", "verbose"));
+        //    request.Content = content;
+
+        //    string formDigest = await GetFormDigestAsync();
+        //    request.Headers.Add("X-RequestDigest", formDigest);
+
+        //    var response = await _httpClient.SendAsync(request);
+        //    await response.EnsureSuccessOrThrowAsync();
+        //    string responseJson = await response.Content.ReadAsStringAsync();
+
+        //    var result = new ReadListItemsResult();
+        //    var itemsDict = new List<Dictionary<string, object>>();
+        //    var dt = new DataTable();
+
+        //    using (JsonDocument doc = JsonDocument.Parse(responseJson))
+        //    {
+        //        if (doc.RootElement.TryGetProperty("d", out JsonElement dElement) &&
+        //            dElement.TryGetProperty("results", out JsonElement results))
+        //        {
+        //            foreach (var item in results.EnumerateArray())
+        //            {
+        //                var dict = new Dictionary<string, object>();
+        //                foreach (var prop in item.EnumerateObject())
+        //                {
+        //                    object value = prop.Value.ValueKind switch
+        //                    {
+        //                        JsonValueKind.String => prop.Value.GetString(),
+        //                        JsonValueKind.Number => prop.Value.GetDecimal(),
+        //                        _ => prop.Value.ToString()
+        //                    };
+        //                    dict[prop.Name] = value;
+
+        //                    if (!dt.Columns.Contains(prop.Name))
+        //                        dt.Columns.Add(prop.Name);
+        //                }
+        //                DataRow row = dt.NewRow();
+        //                foreach (var kvp in dict)
+        //                {
+        //                    row[kvp.Key] = kvp.Value;
+        //                }
+        //                dt.Rows.Add(row);
+        //                itemsDict.Add(dict);
+        //            }
+        //        }
+        //    }
+        //    result.ItemsDictArray = itemsDict;
+        //    result.ItemsTable = dt;
+        //    return result;
+        //}
 
 
         /*

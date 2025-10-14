@@ -200,6 +200,51 @@ namespace UiPathTeam.SharePoint.RestAPI.Tests
             // Cleanup: delete the moved file.
             await _libService.DeleteAsync(_testLibraryName, destinationRelativeUrl, true);
         }
+        [Theory]
+        [MemberData(nameof(GetLibraryServices))]
+        public async Task DeleteItemAsync_File_IntegrationTest(LazyService<SharePointLibraryService> lazyService, LibraryServiceTestData testData)
+        {
+            
+            var library = "Shared Documents";
+            var relativeUrl = "temp2.xlsx";
+            //var arelativeUrlFolder = "";
+
+            //arelativeUrl = String.Format("{0}/{1}", library.TrimEnd("/".ToCharArray()), arelativeUrl.TrimStart("/".ToCharArray()));
+            //arelativeUrlFolder = String.Format("{0}/{1}", library.TrimEnd("/".ToCharArray()), arelativeUrlFolder.TrimStart("/".ToCharArray()));
+            //string libraryRoot = _libService.GetLibraryRootFolderRelativeUrl(library).GetAwaiter().GetResult();
+
+            //if (!relativeUrl.StartsWith(libraryRoot, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    // User gave path relative to library → prepend library root
+            //    relativeUrl = $"{libraryRoot.TrimEnd('/')}/{relativeUrl.TrimStart('/')}";
+            //}
+            //relativeUrl = TestsHelpers.ResolveRelativePath(testData.SiteUrl, relativeUrl);
+            //var relativeUrlFolder = TestsHelpers.ResolveRelativePath(testData.SiteUrl, arelativeUrlFolder);
+
+            //await _libService.DeleteAsync(library, relativeUrl, true);
+            var _libService = await lazyService.GetServiceAsync();
+            await _libService.DeleteAsync(library, relativeUrl, true);
+            //await _libService.DeleteOldAsync(library, relativeUrlFolder, true);
+        }
+        [Theory]
+        [MemberData(nameof(GetLibraryServices))]
+        public async Task DeleteFolderAsync_Custom_File_IntegrationTest(LazyService<SharePointLibraryService> lazyService, LibraryServiceTestData testData)
+        {
+            var _libService = await lazyService.GetServiceAsync();
+            var library = "Shared Documents";
+            var arelativeUrlFolder = "Files";
+            //var arelativeUrlFolder = "";
+
+            //arelativeUrl = String.Format("{0}/{1}", library.TrimEnd("/".ToCharArray()), arelativeUrl.TrimStart("/".ToCharArray()));
+            arelativeUrlFolder = String.Format("{0}/{1}", library.TrimEnd("/".ToCharArray()), arelativeUrlFolder.TrimStart("/".ToCharArray()));
+
+            //var relativeUrl = TestsHelpers.ResolveRelativePath(testData.SiteUrl, relativeUrl);
+            var relativeUrlFolder = TestsHelpers.ResolveRelativePath(testData.SiteUrl, arelativeUrlFolder);
+
+            //await _libService.DeleteAsync(library, relativeUrl, true);
+            //await _libService.DeleteOldAsync(library, relativeUrl, true);
+            await _libService.DeleteAsync(library, relativeUrlFolder, true);
+        }
 
         //[Theory]
         //[MemberData(nameof(GetLibraryServices))]
@@ -214,7 +259,7 @@ namespace UiPathTeam.SharePoint.RestAPI.Tests
 
 
         //    var _libService = await lazyService.GetServiceAsync();
-            
+
 
         //    // Move the file.
         //    //await _libService.MoveItemAsync(sourceRelativeUrl, destinationRelativeUrl, true);
@@ -358,6 +403,51 @@ namespace UiPathTeam.SharePoint.RestAPI.Tests
             // Clean up.
             System.IO.File.Delete(downloadPath);
             await _libService.DeleteAsync(_testLibraryName, uploadRelativeUrl, true);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetLibraryServices))]
+        public async Task UploadFile_Custom_IntegrationTest(LazyService<SharePointLibraryService> lazyService, LibraryServiceTestData testData)
+        {
+
+            
+            string arelativeUrl = "Shared Documents";
+            //var folderName = "Files";
+
+            //string folderPath = $"{_testLibraryName}/{folderName}";
+            string localpath = @"C:\Users\Abdullah.Al-Awlaqi\Downloads\temp2.xlsx";
+
+
+
+
+            var relativeUrl = TestsHelpers.ResolveRelativePath(testData.SiteUrl, arelativeUrl);
+
+            if (!Path.GetFileName(relativeUrl).Contains("."))
+            {
+                relativeUrl = String.Format("{0}/{1}", relativeUrl.TrimEnd('/'), Path.GetFileName(localpath));
+            }
+            var _libService = await lazyService.GetServiceAsync();
+
+            //string uploadFileName = Path.GetFileName(_localTestFilePath);
+            //string uploadRelativeUrl = $"{_testFolderPath}{uploadFileName}";
+
+            // Ensure local file exists.
+            if (!System.IO.File.Exists(localpath))
+            {
+                await System.IO.File.WriteAllTextAsync(localpath, "Test content for upload");
+            }
+
+            //await _libService.UploadFileAsync(relativeUrl, localpath, null, true, true, true, true);
+            await _libService.UploadFileAsync(relativeUrl, localpath, null, true, true, false, false);
+
+            //// Download to verify upload.
+            //string downloadPath = Path.Combine(Directory.GetCurrentDirectory(), "Downloaded_" + uploadFileName);
+            //await _libService.GetFileAsync(downloadPath, relativeUrl);
+            //Assert.True(System.IO.File.Exists(downloadPath));
+
+            //// Clean up.
+            //System.IO.File.Delete(downloadPath);
+            //await _libService.DeleteAsync(_testLibraryName, uploadRelativeUrl, true);
         }
         [Theory]
         [MemberData(nameof(GetLibraryServices))]

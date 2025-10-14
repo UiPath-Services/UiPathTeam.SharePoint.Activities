@@ -190,6 +190,52 @@ namespace UiPathTeam.SharePoint.RestAPI.Tests
 
         [Theory]
         [MemberData(nameof(GetListServices))]
+        public async Task ReadListItemsRenderAsync_Returns_Items_IntegrationTest(LazyService<SharePointListService> lazyService, ListServiceTestData testData)
+        {
+            var _listName = "test_list";
+            
+           
+            var _service = await lazyService.GetServiceAsync();
+
+            if(_service._siteUrl.Contains("igsiph0j410"))
+                _listName = "test_list";
+
+            var camlQuery = "<View><Query><Where><Eq><FieldRef Name='ID' /><Value Type='Number'>151</Value></Eq></Where></Query></View>";
+            // Act
+            //var result = await _service.ReadListItemsAsync(_listName, "<View><ViewFields><FieldRef Name='Resp'/></ViewFields></View>");
+            var result = await _service.ReadListItemsAsync(_listName, camlQuery);
+            //var result = await _service.ReadListItemsAsync(_listName, "<View><ViewFields><FieldRef Name='ChoiCol'/></ViewFields></View>");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.ItemsDictArray);
+            Assert.NotNull(result.ItemsTable);
+            Assert.True(result.ItemsDictArray.Count > 0, "There should be at least one item returned.");
+        }
+        [Theory]
+        [MemberData(nameof(GetListServices))]
+        public async Task ReadListItems2ODataAsync_Returns_Items_IntegrationTest(LazyService<SharePointListService> lazyService, ListServiceTestData testData)
+        {
+            var _listName = "Test List";
+
+
+            var _service = await lazyService.GetServiceAsync();
+
+            if (_service._siteUrl.Contains("igsiph0j410"))
+                _listName = "test_list";
+            // Act
+            var result = await _service.ReadListItemsAsync(_listName, "<View><ViewFields><FieldRef Name='FileLeafRef'/></ViewFields></View>");
+            //var result = await _service.ReadListItemsAsync(_listName, "");
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.ItemsDictArray);
+            Assert.NotNull(result.ItemsTable);
+            Assert.True(result.ItemsDictArray.Count > 0, "There should be at least one item returned.");
+        }
+
+        [Theory]
+        [MemberData(nameof(GetListServices))]
         public async Task UpdateListItemsAsync_Returns_NumberOfRowsAffected_IntegrationTest(LazyService<SharePointListService> lazyService, ListServiceTestData testData)
         {
             var _listName = testData.ListName;

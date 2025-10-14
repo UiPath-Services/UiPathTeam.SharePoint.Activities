@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Net.Security;
@@ -11,6 +12,7 @@ using System.Security;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using UiPathTeam.SharePoint.Service;
 using UiPathTeam.SharePoint.Service.Helpers;
@@ -59,8 +61,9 @@ namespace UiPathTeam.SharePoint.RestAPI.Helpers
             switch (loginMode)
             {
                 case SharePointLoginMode.Online:
-                    return await GetOnlineTokenAsync(sharePointURL,clientId, authority, scopes, username, password);
-                    //return await GetOnlineToken2Async(clientId, authority, scopes, username, password);
+                    //return await GetOnlineTokenAsync(sharePointURL,clientId, authority, scopes, username, password);
+                    return await GetOnlineTokenV2Async(sharePointURL,clientId, authority, scopes, username, password);
+                //return await GetOnlineToken2Async(clientId, authority, scopes, username, password);
                 case SharePointLoginMode.OnPremises:
                     return await GetOnPremisesTokenAsync(clientId, authority, sharePointURL, username);
                 case SharePointLoginMode.AppOnly:
@@ -78,6 +81,294 @@ namespace UiPathTeam.SharePoint.RestAPI.Helpers
             }
         }
 
+        #region Shared HttpClient for MSAL
+        // (UPDATED) Faster connect timeout to avoid lingering on bad IPv6/PAC paths
+        private static readonly SocketsHttpHandler SystemProxyHandler = new()
+        {
+            // Keep: respect customer environment (WPAD/PAC or explicit proxy)
+            UseProxy = true,
+            Proxy = WebRequest.DefaultWebProxy,
+
+            // (UPDATED) Quick connect; allows fast fallback to v4/other path
+            ConnectTimeout = TimeSpan.FromSeconds(8),
+
+            // Reasonable pool hygiene
+            PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+
+            // Throughput
+            MaxConnectionsPerServer = 64,
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+
+            // Be strict but normal TLS
+            SslOptions = new SslClientAuthenticationOptions
+            {
+                // leave defaults; customers may use SSL inspection
+            }
+        };
+        // (UPDATED) Explicit No-Proxy handler for automatic fallback
+        private static readonly SocketsHttpHandler NoProxyHandler = new()
+        {
+            UseProxy = false,
+            Proxy = null,
+
+            ConnectTimeout = TimeSpan.FromSeconds(3),
+            PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+            MaxConnectionsPerServer = 64,
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+        };
+
+        // Factory that lets us inject a specific handler per PCA
+        private sealed class MsalHttpClientFactory : IMsalHttpClientFactory
+        {
+            private readonly HttpClient _client;
+
+            public MsalHttpClientFactory(HttpMessageHandler handler)
+            {
+                _client = new HttpClient(handler, disposeHandler: false)
+                {
+                    // (UPDATED) Give HttpClient enough time; we control attempt budget via CTS
+                    Timeout = Timeout.InfiniteTimeSpan
+                };
+            }
+
+            public HttpClient GetHttpClient() => _client;
+        }
+        public static async Task<string> GetOnlineTokenV2Async(
+        string siteUrl,
+        string clientId,
+        string authority,
+        IEnumerable<string> scopes,
+        string username,
+        string password,
+        TimeSpan? overallTimeout = null)
+        {
+            if (string.IsNullOrWhiteSpace(siteUrl))
+                throw new ArgumentException("siteUrl is required", nameof(siteUrl));
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException("username is required", nameof(username));
+            if (password is null)
+                throw new ArgumentNullException(nameof(password));
+
+            var siteUri = new Uri(siteUrl);
+
+            // (UPDATED) Authority resolution with its own short timeout
+            if (string.IsNullOrWhiteSpace(authority))
+            {
+                authority = await ResolveAuthorityWithFallbackAsync(siteUri).ConfigureAwait(false);
+            }
+
+            // ------------------------------------------------------------
+            // Client ID (keep SharePoint public client if caller didn't provide)
+            // ------------------------------------------------------------
+            if (string.IsNullOrWhiteSpace(clientId))
+                clientId = "9bc3ab49-b65d-410a-85ad-de819febfddc"; // SharePoint public client
+
+            // ------------------------------------------------------------
+            // Scopes default (resource/.default for SPO)
+            // ------------------------------------------------------------
+            if (scopes == null || !scopes.Any())
+                scopes = new[] { $"{siteUri.Scheme}://{siteUri.Host}/.default" };
+
+            // ------------------------------------------------------------
+            // SecureString (MSAL ROPC API accepts it)
+            // ------------------------------------------------------------
+            var secure = new SecureString();
+            foreach (var c in password) secure.AppendChar(c);
+
+            TimeSpan timeout = overallTimeout ?? TimeSpan.FromSeconds(60);
+            
+            if (Debugger.IsAttached)
+            {
+                timeout = TimeSpan.FromSeconds(360); // longer when debugging interactively
+            }
+            var overallCts = new CancellationTokenSource(timeout);
+            Debug.WriteLine("############:TimeoutStart:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));
+
+
+            try
+            {
+                // 1) Try with system proxy first (respects customer env)
+                var token = await TryAcquireAcrossAttemptsAsync(
+                    siteUri, clientId, authority, scopes, username, secure,
+                    useSystemProxy: true,
+                    overallCts.Token).ConfigureAwait(false);
+                
+                if (token is not null)
+                    return token;
+
+                // 2) (UPDATED) Automatic fallback to direct (no proxy)
+                token = await TryAcquireAcrossAttemptsAsync(
+                    siteUri, clientId, authority, scopes, username, secure,
+                    useSystemProxy: false,
+                    overallCts.Token).ConfigureAwait(false);
+
+                if (token is not null)
+                    return token;
+
+                throw new TimeoutException("Token acquisition timed out after trying both proxy and direct paths. Likely DNS/TCP/TLS/proxy connectivity issue.");
+            }
+           
+            finally
+            {
+                Debug.WriteLine("############:TimeouEnd:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));
+                overallCts.Dispose();
+                secure.Dispose();
+            }
+
+        }
+        // (UPDATED) Realm discovery guarded by its own short timeout (3s)
+        private static async Task<string> ResolveAuthorityWithFallbackAsync(Uri siteUri)
+        {
+            using var discoveryCts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            try
+            {
+                var tenantId = await Task.Run(() => GetRealmFromTargetUrl(siteUri), discoveryCts.Token)
+                                         .ConfigureAwait(false);
+                return $"https://login.microsoftonline.com/{tenantId}";
+            }
+            catch
+            {
+                // Heuristic fallback (works in many tenants)
+                var tenantName = siteUri.Host.Split('.')[0];
+                return $"https://login.microsoftonline.com/{tenantName}.onmicrosoft.com";
+            }
+        }
+        // Attempts up to 3 times on the chosen path (proxy or direct)
+        private static async Task<string?> TryAcquireAcrossAttemptsAsync(
+            Uri siteUri,
+            string clientId,
+            string authority,
+            IEnumerable<string> scopes,
+            string username,
+            SecureString securePassword,
+            bool useSystemProxy,
+            CancellationToken overallToken)
+        {
+            // (UPDATED) Build a PCA bound to a specific HttpClient configuration
+            var handler = useSystemProxy ? (HttpMessageHandler)SystemProxyHandler : NoProxyHandler;
+            var httpFactory = new MsalHttpClientFactory(handler); // large; CTS governs attempts
+            Debug.WriteLine("############:TimeoutStart:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture));
+
+            var pca = PublicClientApplicationBuilder.Create(clientId)
+                .WithAuthority(authority)
+                .WithHttpClientFactory(httpFactory)
+                // (UPDATED) Verbose MSAL logs (toggle via listener)
+                .WithLogging((lvl, msg, pii) => Debug.WriteLine($"{DateTime.Now.ToString()} | MSAL {lvl}: {msg}"),
+                             LogLevel.Verbose, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                .Build();
+
+            // (UPDATED) Bounded retries with jitter
+            const int maxAttempts = 3;
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                overallToken.ThrowIfCancellationRequested();
+
+                using var attemptCts = CancellationTokenSource.CreateLinkedTokenSource(overallToken);
+                attemptCts.CancelAfter(TimeSpan.FromSeconds(20)); // per-attempt budget
+
+                Debug.WriteLine($"[AAD] Path={(useSystemProxy ? "proxy" : "direct")}, attempt {attempt}, perAttempt=20s, connectTimeout={(useSystemProxy ? 8 : 3)}s");
+
+                try
+                {
+                    var result = await pca
+                        .AcquireTokenByUsernamePassword(scopes, username, securePassword)
+                        .ExecuteAsync(attemptCts.Token)
+                        .ConfigureAwait(false);
+
+                    return result.AccessToken;
+                }
+                catch (TaskCanceledException ex) 
+                {
+                    // (UPDATED) Treat as transient; only throw if it’s the final attempt
+                    if (attempt < maxAttempts)
+                    {
+                        await Task.Delay(300 * attempt, overallToken).ConfigureAwait(false);
+                        continue;
+                    }
+                    // last attempt -> give caller a chance to try other path
+                    Debug.WriteLine($"Final attempt canceled/timeboxed: {ex.GetType().Name}");
+                    return null;
+                }
+                // Retry broader set of transient service-side failures
+                catch (MsalServiceException ex) when (IsTransient(ex))
+                {
+                    // (UPDATED) Retry if not last; else return null for fallback
+                    if (attempt < maxAttempts)
+                    {
+                        Debug.WriteLine($"MSAL transient ({ex.ErrorCode}, status? {SafeStatus(ex)}), retrying attempt {attempt + 1}...");
+                        await Task.Delay(500 * attempt, overallToken).ConfigureAwait(false);
+                        continue;
+                    }
+                    Debug.WriteLine($"MSAL transient on final attempt ({ex.ErrorCode}), returning null for fallback.");
+                    return null; // <-- allow no-proxy path
+                }
+                catch (MsalClientException ex) when (LooksLikeNetwork(ex))
+                {
+                    // (UPDATED) Same idea for client/network issues
+                    if (attempt < maxAttempts)
+                    {
+                        Debug.WriteLine($"MSAL client/network issue ({ex.ErrorCode}), retrying attempt {attempt + 1}...");
+                        await Task.Delay(400 * attempt, overallToken).ConfigureAwait(false);
+                        continue;
+                    }
+                    Debug.WriteLine($"MSAL client/network issue on final attempt ({ex.ErrorCode}), returning null for fallback.");
+                    return null;
+                }
+                catch (HttpRequestException ex)
+                {
+                    // (UPDATED) Transient socket/proxy errors: retry unless final
+                    if (attempt < maxAttempts)
+                    {
+                        await Task.Delay(400 * attempt, overallToken).ConfigureAwait(false);
+                        continue;
+                    }
+                    Debug.WriteLine($"HttpRequestException on final attempt: {ex.Message}, returning null for fallback.");
+                    return null;
+                }
+                // Other MSAL errors (bad creds, invalid scope, etc.) bubble out
+            }
+
+            return null; //let caller try other path or fail
+        }
+        static bool LooksLikeNetwork(MsalClientException ex)
+        {
+            // MSAL surface codes vary; treat common network-ish cases as transient.
+            var code = ex.ErrorCode?.ToLowerInvariant();
+            return code is "network_not_available_error"
+                         or "http_request_timeout"
+                         or "authentication_canceled"     // sometimes thrown on network cancellation
+                         or "unknown_error";              // be conservative; retries are bounded
+        }
+        static string SafeStatus(MsalServiceException ex)
+        {
+            try { return ex.StatusCode.ToString(); } catch { return "n/a"; }
+        }
+        private static bool IsTransient(MsalServiceException ex)
+        {
+            var code = ex.ErrorCode?.ToLowerInvariant();
+
+            // Common transient buckets seen in the wild
+            if (code is "temporarily_unavailable"           // AAD busy / retry
+                     or "request_timeout"                   // AAD timed out the request
+                     or "gateway_timeout"                   // 504 from a gateway
+                     or "service_not_available"             // maintenance/partial outage
+                     or "timeout"                           // generic timeout label
+                     or "server_error")                     // 5xx umbrella
+                return true;
+
+            // (UPDATED) fall back on HTTP status if exposed
+            // NOTE: MsalServiceException.StatusCode exists in recent MSAL versions
+            try
+            {
+                var status = ex.StatusCode;
+                if (status == 408 || status == 429 || (status >= 500 && status <= 599))
+                    return true;
+            }
+            catch { /* older MSAL: StatusCode may not exist */ }
+
+            return false;
+        }
+        #endregion
         // Online mode: Acquire token using username/password (ROPc flow).
         private static async Task<string> GetOnlineTokenAsync(
             string siteUrl,

@@ -20,6 +20,7 @@ namespace UiPathTeam.SharePoint.Activities.Helpers
             string sitePath = uri.LocalPath;
 
             if (!relativePath.StartsWith("/")) relativePath = "/" + relativePath;
+
             if (!sitePath.StartsWith("/")) sitePath = "/" + sitePath;
             if (relativePath.StartsWith(sitePath))
             {

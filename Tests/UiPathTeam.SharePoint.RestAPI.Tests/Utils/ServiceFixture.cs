@@ -27,41 +27,52 @@ public class ServiceFixture<TService> where TService : SharePointBaseService
         var connectionsWithData = new List<(SharePointRestConnectionManager Manager, TestData TestData)>
         {
 
-            //// Online Username & Password site configuration
-            (
-                new SharePointRestConnectionManager
-                {
-                    Url = Configuration["SP_ONLINE_SITE_URL"],
-                    LoginMode = SharePointLoginMode.Online,
-                    UserName = Configuration["SP_ONLINE_USERNAME"],
-                    Password = Configuration["SP_ONLINE_PASSWORD"],
-
-                },
-                TestDataHelper.GetTestData(SharePointType.Online, typeof(TService))
-            ),
-
-            ////On-premises 2016 site configuration
+            //////// Online Username & Password site configuration
             //(
             //    new SharePointRestConnectionManager
             //    {
-            //        Url = Configuration["SP_ONPREM_2016_SITE_URL"],
-            //        UserName = Configuration["SP_ONPREM_2016_USERNAME"],
-            //        Password = Configuration["SP_ONPREM_2016_PASSWORD"],
-            //        LoginMode = SharePointLoginMode.OnPremises
+            //        Url = Configuration["SP_ONLINE_SITE_URL"],
+            //        LoginMode = SharePointLoginMode.Online,
+            //        UserName = Configuration["SP_ONLINE_USERNAME"],
+            //        Password = Configuration["SP_ONLINE_PASSWORD"],
+
             //    },
-            //    TestDataHelper.GetTestData(SharePointType.Server2016, typeof(TService))
+            //    TestDataHelper.GetTestData(SharePointType.Online, typeof(TService))
             //),
-            //On-premises 2019 site configuration
+
+            //On-premises 2016 site configuration
             (
                 new SharePointRestConnectionManager
                 {
-                    Url = Configuration["SP_ONPREM_2019_SITE_URL"],
-                    UserName = Configuration["SP_ONPREM_2019_USERNAME"],
-                    Password = Configuration["SP_ONPREM_2019_PASSWORD"],
+                    Url = Configuration["SP_ONPREM_2016_SITE_URL"],
+                    UserName = Configuration["SP_ONPREM_2016_USERNAME"],
+                    Password = Configuration["SP_ONPREM_2016_PASSWORD"],
                     LoginMode = SharePointLoginMode.OnPremises
                 },
-                TestDataHelper.GetTestData(SharePointType.Server2019, typeof(TService))
-            )
+                TestDataHelper.GetTestData(SharePointType.Server2016, typeof(TService))
+            ),
+            //(
+            //    new SharePointRestConnectionManager
+            //    {
+            //        Url = Configuration["SP_ONLINE_SITE_URL"],
+            //        LoginMode = SharePointLoginMode.Online,
+            //        UserName = Configuration["SP_ONLINE_USERNAME"],
+            //        Password = Configuration["SP_ONLINE_PASSWORD"],
+
+            //    },
+            //    TestDataHelper.GetTestData(SharePointType.Online, typeof(TService))
+            //),
+            //On-premises 2019 site configuration
+            //(
+            //    new SharePointRestConnectionManager
+            //    {
+            //        Url = Configuration["SP_ONPREM_2019_SITE_URL"],
+            //        UserName = Configuration["SP_ONPREM_2019_USERNAME"],
+            //        Password = Configuration["SP_ONPREM_2019_PASSWORD"],
+            //        LoginMode = SharePointLoginMode.OnPremises
+            //    },
+            //    TestDataHelper.GetTestData(SharePointType.Server2019, typeof(TService))
+            //)
 
             // Online Username & Password site configuration
             //(

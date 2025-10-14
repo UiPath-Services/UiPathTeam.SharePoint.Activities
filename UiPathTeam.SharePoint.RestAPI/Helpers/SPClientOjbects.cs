@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace UiPathTeam.SharePoint
 {
+    public class ListSPUser
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Email { get; set; }
+        public string Sip { get; set; }
+        public string Picture { get; set; }
+    }
     public class UserIdInfo
     {
         public string NameId { get; set; }

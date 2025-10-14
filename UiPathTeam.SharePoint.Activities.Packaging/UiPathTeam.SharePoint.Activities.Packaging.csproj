@@ -11,9 +11,9 @@
 		<VersionBuild>$([System.DateTime]::UtcNow.DayOfYear.ToString("F0"))</VersionBuild>
 		<VersionRevision>$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("F0"))</VersionRevision>
 		<PackageId>UiPathTeam.SharePoint.Activities</PackageId>
-		<VersionPrefix Condition="'$(Configuration)' == 'Release'">2.0.2</VersionPrefix>
+		<VersionPrefix Condition="'$(Configuration)' == 'Release'">2.0.3</VersionPrefix>
 		<!--<VersionPrefix Condition="'$(Configuration)' == 'Debug'">1.8.$(VersionBuild)-dev.$(VersionRevision)</VersionPrefix>-->
-		<VersionPrefix Condition="'$(Configuration)' == 'Debug'">2.0.2-dev.$(VersionRevision)</VersionPrefix>
+		<VersionPrefix Condition="'$(Configuration)' == 'Debug'">2.0.3-dev.$(VersionRevision)</VersionPrefix>
 		<Authors>Abdullah Al-Awlaqi</Authors>
 		<Owners>UiPathTeam InternalLabs</Owners>
 		<PackageOwners>UiPathTeam InternalLabs</PackageOwners>

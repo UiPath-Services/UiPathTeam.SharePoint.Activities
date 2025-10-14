@@ -225,11 +225,98 @@ namespace UiPathTeam.SharePoint.RestAPI.Services
         /// <summary>
         /// 5) Delete: Deletes a file or folder at the specified relative URL (relative to the library).
         /// If the file/folder is an ASPX file and AllowOperationsOnASPXFiles is false, an exception is thrown.
+        /// Behavior:
+        ///   - If a file exists at the URL, delete the file.
+        ///   - Else if a folder exists at the URL, delete the folder.
+        ///   - Else throw an exception stating the path does not exist.
         /// </summary>
         public async Task DeleteAsync(string libraryName, string relativeUrl, bool allowOperationsOnASPXFiles)
         {
             string libraryRelativeUrl = await GetLibraryRootFolderRelativeUrl(libraryName);
-            var aRelativeUrl = $"{libraryRelativeUrl.TrimEnd("/".ToCharArray())}/{relativeUrl.TrimStart("/".ToCharArray())}";
+
+            if (!relativeUrl.StartsWith(libraryRelativeUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                // User gave path relative to library → prepend library root
+                relativeUrl = $"{libraryRelativeUrl.TrimEnd('/')}/{relativeUrl.TrimStart('/')}";
+            }
+           
+
+            //var aRelativeUrl = relativeUrl;
+            // Guard for ASPX when not allowed
+            if (!allowOperationsOnASPXFiles && relativeUrl.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase))
+                throw new Exception("Operations on ASPX files are not allowed.");
+
+            // Helpers
+            static string Quote(string p) => $"'{p.Replace("'", "''")}'";
+            //void SetJsonHeaders(HttpRequestMessage req)
+            //{
+            //    req.Headers.Accept.Clear();
+            //    req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            //}
+
+            async Task<bool> ExistsAsync(string apiUrl)
+            {
+                using var req = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+                SetJsonHeaders(req);
+                using var res = await _httpClient.SendAsync(req);
+                if (res.IsSuccessStatusCode) return true;
+                if (res.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
+                // Any other status -> surface the error so caller can decide
+                var body = await res.Content.ReadAsStringAsync();
+                throw new Exception($"Existence check failed for: {apiUrl}. Status: {(int)res.StatusCode}. Body: {body}");
+            }
+
+            async Task DeleteWithOverrideAsync(string apiUrl, string formDigest)
+            {
+                using var req = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+                SetJsonHeaders(req);
+                req.Headers.Add("X-HTTP-Method", "DELETE");
+                req.Headers.Add("IF-MATCH", "*");
+                req.Headers.Add("X-RequestDigest", formDigest);
+                req.Content = new StringContent(string.Empty);
+                using var res = await _httpClient.SendAsync(req);
+                await res.EnsureSuccessOrThrowAsync();
+            }
+
+            // Build endpoints
+            var fileApi = $"{_siteUrl}/_api/web/GetFileByServerRelativeUrl({Quote(relativeUrl)})?$select=ServerRelativeUrl";
+            var folderApi = $"{_siteUrl}/_api/web/GetFolderByServerRelativeUrl({Quote(relativeUrl)})?$select=ServerRelativeUrl";
+
+            // 1) Check if a FILE exists first
+            bool fileExists = await ExistsAsync(fileApi);
+            string formDigest = await GetFormDigestAsync();
+
+            if (fileExists)
+            {
+                // Delete file
+                var deleteFileApi = $"{_siteUrl}/_api/web/GetFileByServerRelativeUrl({Quote(relativeUrl)})";
+                await DeleteWithOverrideAsync(deleteFileApi, formDigest);
+                return;
+            }
+
+            // 2) Else check if a FOLDER exists
+            bool folderExists = await ExistsAsync(folderApi);
+            if (folderExists)
+            {
+                // Delete folder
+                var deleteFolderApi = $"{_siteUrl}/_api/web/GetFolderByServerRelativeUrl({Quote(relativeUrl)})";
+                await DeleteWithOverrideAsync(deleteFolderApi, formDigest);
+                return;
+            }
+
+            // 3) Neither a file nor a folder exists at the given server-relative URL
+            throw new FileNotFoundException($"The provided path does not exist as a file or a folder: {relativeUrl}");
+        }
+
+        /// <summary>
+        /// 5) Delete: Deletes a file or folder at the specified relative URL (relative to the library).
+        /// If the file/folder is an ASPX file and AllowOperationsOnASPXFiles is false, an exception is thrown.
+        /// </summary>
+        public async Task DeleteOOOLDAsync(string libraryName, string relativeUrl, bool allowOperationsOnASPXFiles)
+        {
+            //string libraryRelativeUrl = await GetLibraryRootFolderRelativeUrl(libraryName);
+            //var aRelativeUrl = $"{libraryRelativeUrl.TrimEnd("/".ToCharArray())}/{relativeUrl.TrimStart("/".ToCharArray())}";
+            var aRelativeUrl = relativeUrl;
             // If not allowed and file appears to be an ASPX file, throw.
             if (!allowOperationsOnASPXFiles && aRelativeUrl.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase))
             {
@@ -250,6 +337,7 @@ namespace UiPathTeam.SharePoint.RestAPI.Services
             var response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
+                string errorContentTemp = await response.Content.ReadAsStringAsync();
                 // If file deletion fails, try deleting as folder.
                 var folderUrl = $"{_siteUrl}/_api/web/GetFolderByServerRelativeUrl('{aRelativeUrl}')";
                 using var folderRequest = new HttpRequestMessage(HttpMethod.Post, folderUrl);
@@ -590,7 +678,7 @@ namespace UiPathTeam.SharePoint.RestAPI.Services
                     await CheckOutFileAsync(relativeUrl);
                 }
                 // Delete the file before uploading.
-                await DeleteAsync("", relativeUrl, allowOperationsOnASPXFiles);
+                //await DeleteAsync("", relativeUrl, allowOperationsOnASPXFiles);
             }
 
             // Upload the file.
@@ -658,7 +746,7 @@ namespace UiPathTeam.SharePoint.RestAPI.Services
                 {
                     await CheckOutFileAsync(relativeUrl);
                 }
-                await DeleteAsync("", relativeUrl, allowOperationsOnASPXFiles);
+                //await DeleteAsync("", relativeUrl, allowOperationsOnASPXFiles);
             }
             byte[] fileBytes = await File.ReadAllBytesAsync(localPath);
             int fileSize = fileBytes.Length;
